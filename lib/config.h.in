@@ -1,0 +1,6 @@
+#ifndef GR_ADAPT_CONFIG_H
+#define GR_ADAPT_CONFIG_H
+
+#cmakedefine ARMADILLO_FOUND
+
+#endif //GR_ADAPT_CONFIG_H

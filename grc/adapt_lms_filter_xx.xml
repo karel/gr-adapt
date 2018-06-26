@@ -1,0 +1,107 @@
+<block>
+  <name>LMS Filter</name>
+  <key>adapt_lms_filter_xx</key>
+  <category>[Adaptive Filters]/</category>
+  <import>import adapt</import>
+  <make>adapt.lms_filter_$(type)($first_input, $num_taps, $mu, $skip, $decimation, $adapt, $reset)</make>
+  <callback>set_mu($mu)</callback>
+  <callback>set_skip($skip)</callback>
+  <callback>set_adapt($adapt)</callback>
+  <callback>set_reset($reset)</callback>
+  <param>
+    <name>Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Complex</name>
+      <key>cc</key>
+      <opt>input:complex</opt>
+      <opt>output:complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>ff</key>
+      <opt>input:float</opt>
+      <opt>output:float</opt>
+    </option>
+  </param>
+  <param>
+    <name>First Input</name>
+    <key>first_input</key>
+    <type>enum</type>
+    <option>
+      <name>Reference</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>Error</name>
+      <key>False</key>
+    </option>
+  </param>
+  <param>
+    <name>Num. Taps</name>
+    <key>num_taps</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>μ</name>
+    <key>mu</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Skip</name>
+    <key>skip</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Decimation</name>
+    <key>decimation</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Adapt</name>
+    <key>adapt</key>
+    <value>True</value>
+    <type>bool</type>
+  </param>
+  <param>
+    <name>Reset</name>
+    <key>reset</key>
+    <value>False</value>
+    <type>bool</type>
+  </param>
+  <check>$num_taps &gt; 0</check>
+  <check>$mu &gt; 0 and $mu &lt;= 1</check>
+  <check>$skip &gt;= 0</check>
+  <check>$decimation &gt; 0</check>
+  <sink>
+    <name>ref</name>
+    <type>$type.output</type>
+    <nports>1</nports>
+  </sink>
+  <sink>
+    <name>in</name>
+    <type>$type.output</type>
+    <nports>1</nports>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>$type.output</type>
+    <nports>1</nports>
+  </source>
+  <source>
+    <name>error</name>
+    <type>$type.output</type>
+    <nports>1</nports>
+    <optional>1</optional>
+  </source>
+  <source>
+    <name>taps</name>
+    <type>$type.output</type>
+    <vlen>$num_taps</vlen>
+    <nports>1</nports>
+    <optional>1</optional>
+  </source>
+</block>
