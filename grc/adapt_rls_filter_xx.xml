@@ -84,17 +84,17 @@
   <check>$skip &gt;= 0</check>
   <check>$decimation &gt; 0</check>
   <sink>
-    <name>ref</name>
+    <name>reference</name>
     <type>$type.input</type>
     <nports>1</nports>
   </sink>
   <sink>
-    <name>in</name>
+    <name>input</name>
     <type>$type.input</type>
     <nports>1</nports>
   </sink>
   <source>
-    <name>out</name>
+    <name>output</name>
     <type>$type.output</type>
     <nports>1</nports>
   </source>

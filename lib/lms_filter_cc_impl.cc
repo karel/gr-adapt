@@ -54,7 +54,7 @@ lms_filter_cc_impl::lms_filter_cc_impl(bool first_input,
                                        bool reset)
     : gr::sync_decimator(
           "lms_filter_cc",
-          gr::io_signature::make(2, 2, sizeof(gr_complex)),
+          gr::io_signature::make(2, 3, sizeof(gr_complex)),
           gr::io_signature::makev(1,
                                   3,
                                   std::vector<int>{sizeof(gr_complex),
@@ -135,6 +135,12 @@ int lms_filter_cc_impl::work(int noutput_items,
                              gr_vector_void_star& output_items) {
     const auto* desired = (const gr_complex*)input_items[0] + d_taps.size() - 1;
     const auto* input = (const gr_complex*)input_items[1];
+    const gr_complex* filtered_input;
+    if (input_items.size() == 3) {
+        filtered_input = (gr_complex*)input_items[2];
+    } else {
+        filtered_input = (gr_complex*)input_items[1];
+    }
     auto* out = (gr_complex*)output_items[0];
     gr_complex* error_out;
     gr_complex* taps_out;
@@ -161,6 +167,8 @@ int lms_filter_cc_impl::work(int noutput_items,
 #ifdef ARMADILLO_FOUND
     gr_complex scale;
     arma::cx_fvec input_arma((gr_complex*)input, noutput_items * decimation() + l - 1, false, true);
+    arma::cx_fvec filtered_input_arma(
+        (gr_complex*)filtered_input, noutput_items * decimation() + l - 1, false, true);
 #endif // ARMADILLO_FOUND
     for (int i = 0; i < noutput_items; i++) {
         // Calculate the output signal y(n) of the adaptive filter.
@@ -190,11 +198,11 @@ int lms_filter_cc_impl::work(int noutput_items,
             d_i = 0;
 #ifdef ARMADILLO_FOUND
             scale = d_mu * d_error;
-            d_taps += arma::conj(input_arma.subvec(j, arma::size(d_taps))) * scale;
+            d_taps += arma::conj(filtered_input_arma.subvec(j, arma::size(d_taps))) * scale;
 #else
             for (int k = 0; k < l; k++) {
                 // Update tap locally from error.
-                update_tap(d_taps[k], input[j + k]);
+                update_tap(d_taps[k], filtered_input[j + k]);
 #ifdef ALIGNED_FIR_FILTER
                 // Update aligned taps in filter object.
                 fir_filter_ccc::update_tap(d_taps[k], k);
