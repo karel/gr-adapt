@@ -3,10 +3,11 @@
   <key>adapt_lms_filter_xx</key>
   <category>[Adaptive Filters]/</category>
   <import>import adapt</import>
-  <make>adapt.lms_filter_$(type)($first_input, $num_taps, $mu, $skip, $decimation, $adapt, $reset)</make>
+  <make>adapt.lms_filter_$(type)($first_input, $num_taps, $mu, $skip, $decimation, $adapt, $bypass, $reset)</make>
   <callback>set_mu($mu)</callback>
   <callback>set_skip($skip)</callback>
   <callback>set_adapt($adapt)</callback>
+  <callback>set_bypass($bypass)</callback>
   <callback>set_reset($reset)</callback>
   <param>
     <name>Type</name>
@@ -80,6 +81,12 @@
     <name>Adapt</name>
     <key>adapt</key>
     <value>True</value>
+    <type>bool</type>
+  </param>
+  <param>
+    <name>Bypass</name>
+    <key>bypass</key>
+    <value>False</value>
     <type>bool</type>
   </param>
   <param>

@@ -23,6 +23,7 @@
 #endif
 
 #include "lms_filter_cc_impl.h"
+#include <cstring>
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
@@ -37,9 +38,10 @@ lms_filter_cc::sptr lms_filter_cc::make(bool first_input,
                                         unsigned skip,
                                         unsigned decimation,
                                         bool adapt,
+                                        bool bypass,
                                         bool reset) {
     return gnuradio::get_initial_sptr(
-        new lms_filter_cc_impl(first_input, num_taps, mu, skip, decimation, adapt, reset));
+        new lms_filter_cc_impl(first_input, num_taps, mu, skip, decimation, adapt, bypass, reset));
 }
 
 /*
@@ -51,6 +53,7 @@ lms_filter_cc_impl::lms_filter_cc_impl(bool first_input,
                                        unsigned skip,
                                        unsigned decimation,
                                        bool adapt,
+                                       bool bypass,
                                        bool reset)
     : gr::sync_decimator(
           "lms_filter_cc",
@@ -63,7 +66,7 @@ lms_filter_cc_impl::lms_filter_cc_impl(bool first_input,
           decimation),
       fir_filter_ccc(decimation, std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
       d_first_input(first_input), d_updated(false), d_skip(skip), d_i(0), d_adapt(adapt),
-      d_reset(false) {
+      d_bypass(bypass), d_reset(false) {
     set_mu(mu);
 
     const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
@@ -113,6 +116,10 @@ bool lms_filter_cc_impl::get_adapt() const { return d_adapt; }
 
 void lms_filter_cc_impl::set_adapt(bool adapt) { d_adapt = adapt; }
 
+bool lms_filter_cc_impl::get_bypass() const { return d_bypass; }
+
+void lms_filter_cc_impl::set_bypass(bool bypass) { d_bypass = bypass; }
+
 bool lms_filter_cc_impl::get_reset() const { return d_reset; }
 
 void lms_filter_cc_impl::set_reset(bool reset) {
@@ -153,6 +160,17 @@ int lms_filter_cc_impl::work(int noutput_items,
     } else {
         error_out = nullptr;
         taps_out = nullptr;
+    }
+
+    if (d_bypass) {
+        std::memcpy(out, input, sizeof(gr_complex) * noutput_items);
+        if (error_out != nullptr) {
+            std::memset(error_out, 0, sizeof(gr_complex) * noutput_items);
+        }
+        if (taps_out != nullptr) {
+            std::memset(taps_out, 0, sizeof(gr_complex) * noutput_items * d_taps.size());
+        }
+        return noutput_items;
     }
 
     if (d_updated) {
