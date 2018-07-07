@@ -79,7 +79,7 @@ void lms_filter_ff_impl::set_taps(const std::vector<float>& new_taps) {
 #ifdef ARMADILLO_FOUND
     d_new_taps = arma::fvec(new_taps);
 #else
-    d_new_taps = d_new_taps;
+    d_new_taps = new_taps;
 #endif // ARMADILLO_FOUND
     d_updated = true;
 }
