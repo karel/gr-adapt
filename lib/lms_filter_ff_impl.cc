@@ -154,6 +154,13 @@ int lms_filter_ff_impl::work(int noutput_items,
         taps_out = nullptr;
     }
 
+    if (d_updated) {
+        d_taps = d_new_taps;
+        set_history(d_taps.size());
+        d_updated = false;
+        return 0; // history requirements may have changed.
+    }
+
     if (d_bypass) {
         std::memcpy(out, input, sizeof(float) * noutput_items);
         if (error_out != nullptr) {
@@ -163,13 +170,6 @@ int lms_filter_ff_impl::work(int noutput_items,
             std::memset(taps_out, 0, sizeof(float) * noutput_items * d_taps.size());
         }
         return noutput_items;
-    }
-
-    if (d_updated) {
-        d_taps = d_new_taps;
-        set_history(d_taps.size());
-        d_updated = false;
-        return 0; // history requirements may have changed.
     }
 
     int j = 0;

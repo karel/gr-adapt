@@ -37,9 +37,10 @@ nlms_filter_cc::sptr nlms_filter_cc::make(bool first_input,
                                           unsigned skip,
                                           unsigned decimation,
                                           bool adapt,
+                                          bool bypass,
                                           bool reset) {
     return gnuradio::get_initial_sptr(
-        new nlms_filter_cc_impl(first_input, num_taps, mu, skip, decimation, adapt, reset));
+        new nlms_filter_cc_impl(first_input, num_taps, mu, skip, decimation, adapt, bypass, reset));
 }
 
 /*
@@ -51,10 +52,11 @@ nlms_filter_cc_impl::nlms_filter_cc_impl(bool first_input,
                                          unsigned skip,
                                          unsigned decimation,
                                          bool adapt,
+                                         bool bypass,
                                          bool reset)
     : gr::sync_decimator(
           "nlms_filter_cc",
-          gr::io_signature::make(2, 2, sizeof(gr_complex)),
+          gr::io_signature::make(2, 3, sizeof(gr_complex)),
           gr::io_signature::makev(1,
                                   3,
                                   std::vector<int>{sizeof(gr_complex),
@@ -64,7 +66,7 @@ nlms_filter_cc_impl::nlms_filter_cc_impl(bool first_input,
       fir_filter_ccc(decimation, std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
       d_first_input(first_input), d_updated(false),
       d_epsilon(std::numeric_limits<float>::epsilon()), d_skip(skip), d_i(0), d_adapt(adapt),
-      d_reset(false) {
+      d_bypass(bypass), d_reset(false) {
     set_mu(mu);
 
     const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
@@ -114,11 +116,23 @@ bool nlms_filter_cc_impl::get_adapt() const { return d_adapt; }
 
 void nlms_filter_cc_impl::set_adapt(bool adapt) { d_adapt = adapt; }
 
+bool nlms_filter_cc_impl::get_bypass() const { return d_bypass; }
+
+void nlms_filter_cc_impl::set_bypass(bool bypass) { d_bypass = bypass; }
+
 bool nlms_filter_cc_impl::get_reset() const { return d_reset; }
 
 void nlms_filter_cc_impl::set_reset(bool reset) {
     d_reset = reset;
     if (d_reset) {
+        std::cout << "[";
+        for (unsigned i = 0; i < d_taps.size(); i++) {
+            std::cout << std::showpos << d_taps[i].real() << d_taps[i].imag();
+            if (d_taps.size() < (i - 1)) {
+                std::cout << ", ";
+            }
+        }
+        std::cout << "]" << std::endl;
         set_taps(std::vector<gr_complex>(d_taps.size(), gr_complex(0, 0)));
     }
 }
@@ -136,6 +150,12 @@ int nlms_filter_cc_impl::work(int noutput_items,
                               gr_vector_void_star& output_items) {
     const auto* desired = (const gr_complex*)input_items[0] + d_taps.size() - 1;
     const auto* input = (const gr_complex*)input_items[1];
+    const gr_complex* filtered_input;
+    if (input_items.size() == 3) {
+        filtered_input = (gr_complex*)input_items[2];
+    } else {
+        filtered_input = (gr_complex*)input_items[1];
+    }
     auto* out = (gr_complex*)output_items[0];
     gr_complex* error_out;
     gr_complex* taps_out;
@@ -157,11 +177,24 @@ int nlms_filter_cc_impl::work(int noutput_items,
         return 0; // history requirements may have changed.
     }
 
+    if (d_bypass) {
+        std::memcpy(out, input, sizeof(gr_complex) * noutput_items);
+        if (error_out != nullptr) {
+            std::memset(error_out, 0, sizeof(gr_complex) * noutput_items);
+        }
+        if (taps_out != nullptr) {
+            std::memset(taps_out, 0, sizeof(gr_complex) * noutput_items * d_taps.size());
+        }
+        return noutput_items;
+    }
+
     int j = 0;
     size_t l = d_taps.size();
 #ifdef ARMADILLO_FOUND
     gr_complex scale;
     arma::cx_fvec input_arma((gr_complex*)input, noutput_items * decimation() + l - 1, false, true);
+    arma::cx_fvec filtered_input_arma(
+        (gr_complex*)filtered_input, noutput_items * decimation() + l - 1, false, true);
 #endif // ARMADILLO_FOUND
     for (int i = 0; i < noutput_items; i++) {
         // Calculate the output signal y(n) of the adaptive filter.
@@ -200,11 +233,11 @@ int nlms_filter_cc_impl::work(int noutput_items,
             // Update the filter coefficients.
 #ifdef ARMADILLO_FOUND
             scale = d_mu * d_error / d_power;
-            d_taps += arma::conj(input_arma.subvec(j, arma::size(d_taps))) * scale;
+            d_taps += arma::conj(filtered_input_arma.subvec(j, arma::size(d_taps))) * scale;
 #else
             for (int k = 0; k < l; k++) {
                 // Update tap locally from error.
-                update_tap(d_taps[k], input[j + k]);
+                update_tap(d_taps[k], filtered_input[j + k]);
 #ifdef ALIGNED_FIR_FILTER
                 // Update aligned taps in filter object.
                 fir_filter_ccc::update_tap(d_taps[k], k);
