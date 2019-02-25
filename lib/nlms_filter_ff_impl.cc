@@ -164,7 +164,7 @@ int nlms_filter_ff_impl::work(int noutput_items,
     }
 
     if (d_bypass) {
-        std::memcpy(out, input, sizeof(float) * noutput_items);
+        std::memcpy(out, input + d_taps.size() - 1, sizeof(float) * noutput_items);
         if (error_out != nullptr) {
             std::memset(error_out, 0, sizeof(float) * noutput_items);
         }
