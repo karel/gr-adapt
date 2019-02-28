@@ -215,10 +215,10 @@ int nlms_filter_cc_impl::work(int noutput_items,
             d_i = 0;
             // Calculate the power.
 #ifdef ARMADILLO_FOUND
-            d_power = arma::cdot(input_arma.subvec(j, arma::size(d_taps)),
-                                 input_arma.subvec(j, arma::size(d_taps)));
+            d_power = arma::cdot(filtered_input_arma.subvec(j, arma::size(d_taps)),
+                                 filtered_input_arma.subvec(j, arma::size(d_taps)));
 #else
-            volk_32fc_x2_conjugate_dot_prod_32fc(&d_power, &input[j], &input[j], (unsigned)l);
+            volk_32fc_x2_conjugate_dot_prod_32fc(&d_power, &filtered_input[j], &filtered_input[j], (unsigned)l);
 #endif // ARMADILLO_FOUND
             d_power += d_epsilon;
 

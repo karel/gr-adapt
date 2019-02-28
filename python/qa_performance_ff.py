@@ -41,6 +41,7 @@ class qa_performance_ff (gr_unittest.TestCase):
     skip = 0
     decimation = 1
     adapt = True
+    bypass = False
     reset = False
     n_samples = 1024*1000
     plot_enabled = True
@@ -54,10 +55,10 @@ class qa_performance_ff (gr_unittest.TestCase):
     def test_001_t (self):
         # Create filters
         filters_ff = []
-        lms_filter_ff = adapt.lms_filter_ff(self.first_input, self.n_taps, self.mu_lms, self.skip, self.decimation, self.adapt, self.reset)
+        lms_filter_ff = adapt.lms_filter_ff(self.first_input, self.n_taps, self.mu_lms, self.skip, self.decimation, self.adapt, self.bypass, self.reset)
         filters_ff.append(lms_filter_ff)
 
-        nlms_filter_ff = adapt.nlms_filter_ff(self.first_input, self.n_taps, self.mu_nlms, self.skip, self.decimation, self.adapt, self.reset)
+        nlms_filter_ff = adapt.nlms_filter_ff(self.first_input, self.n_taps, self.mu_nlms, self.skip, self.decimation, self.adapt, self.bypass, self.reset)
         filters_ff.append(nlms_filter_ff)
 
         rls_filter_ff = adapt.rls_filter_ff(self.first_input, self.n_taps, self.delta_rls, self.lambda_rls, self.skip, self.decimation, self.adapt, self.reset)

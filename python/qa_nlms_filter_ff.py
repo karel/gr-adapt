@@ -32,6 +32,7 @@ class qa_nlms_filter_ff (gr_unittest.TestCase):
     skip = 0
     decimation = 1
     adapt = True
+    bypass = False
     reset = False
     n_samples = 1024*2
     n_ensemble = 500
@@ -59,7 +60,7 @@ class qa_nlms_filter_ff (gr_unittest.TestCase):
         y_sink_nlms = []
         e_sink_nlms = []
         for j, _ in enumerate(W):
-            nlms_filter_ff.append(adapt.nlms_filter_ff(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.reset))
+            nlms_filter_ff.append(adapt.nlms_filter_ff(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.bypass, self.reset))
             y_sink_nlms.append(blocks.vector_sink_f())
             e_sink_nlms.append(blocks.vector_sink_f())
             self.tb.connect((nlms_filter_ff[j], 0), y_sink_nlms[j])
@@ -130,7 +131,7 @@ class qa_nlms_filter_ff (gr_unittest.TestCase):
         y_sink_nlms = []
         e_sink_nlms = []
         for j in range(0, len(mu)):
-            nlms_filter_ff.append(adapt.nlms_filter_ff(True, self.n_taps, mu[j], self.skip, self.decimation, self.adapt, self.reset))
+            nlms_filter_ff.append(adapt.nlms_filter_ff(True, self.n_taps, mu[j], self.skip, self.decimation, self.adapt, self.bypass, self.reset))
             y_sink_nlms.append(blocks.vector_sink_f())
             e_sink_nlms.append(blocks.vector_sink_f())
             self.tb.connect((nlms_filter_ff[j], 0), y_sink_nlms[j])
@@ -202,7 +203,7 @@ class qa_nlms_filter_ff (gr_unittest.TestCase):
 
         d_source = blocks.vector_source_f(d.tolist())
         u_source = blocks.vector_source_f(u.tolist())
-        nlms_filter_ff = adapt.nlms_filter_ff(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.reset)
+        nlms_filter_ff = adapt.nlms_filter_ff(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.bypass, self.reset)
         y_sink = blocks.vector_sink_f()
         e_sink = blocks.vector_sink_f()
         self.tb.connect(d_source, (nlms_filter_ff, 0))
@@ -241,7 +242,7 @@ class qa_nlms_filter_ff (gr_unittest.TestCase):
 
         d_source = blocks.vector_source_f(d.tolist())
         u_source = blocks.vector_source_f(u.tolist())
-        nlms_filter_ff = adapt.nlms_filter_ff(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.reset)
+        nlms_filter_ff = adapt.nlms_filter_ff(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.bypass, self.reset)
         y_sink = blocks.vector_sink_f()
         e_sink = blocks.vector_sink_f()
         self.tb.connect(d_source, (nlms_filter_ff, 0))

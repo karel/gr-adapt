@@ -15,6 +15,8 @@ The following filters are provided:
 * Recursive least squares (__RLS__)
 * Recursive least squares employing QR decomposition (__QRD-RLS__ and __IQRD-RLS__)
 
+The LMS and NLMS filters take an optional third input, which, if provided, will be used to update the filter taps. This allows the LMS and NLMS filters to be used in the filtered-x configuration (i.e. __FxLMS__ and __FxNLMS__).
+
 ### Tests
 
 There are several tests regarding performance and convergence of the provided filters in the [python](./python) directory. The [README](./python/README.md) in there gives an overview of those test results.
