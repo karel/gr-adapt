@@ -3,10 +3,11 @@
   <key>adapt_nlms_filter_xx</key>
   <category>[Adaptive Filters]/</category>
   <import>import adapt</import>
-  <make>adapt.nlms_filter_$(type)($first_input, $num_taps, $mu, $skip, $decimation, $adapt, $reset)</make>
+  <make>adapt.nlms_filter_$(type)($first_input, $num_taps, $mu, $skip, $decimation, $adapt, $bypass, $reset)</make>
   <callback>set_mu($mu)</callback>
   <callback>set_skip($skip)</callback>
   <callback>set_adapt($adapt)</callback>
+  <callback>set_bypass($bypass)</callback>
   <callback>set_reset($reset)</callback>
   <param>
     <name>Type</name>
@@ -39,6 +40,21 @@
     </option>
   </param>
   <param>
+    <name>Filtered Input</name>
+    <key>filtered_input</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Enabled</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>Disabled</name>
+      <key>True</key>
+    </option>
+  </param>
+  <param>
     <name>Num. Taps</name>
     <key>num_taps</key>
     <type>int</type>
@@ -67,6 +83,12 @@
     <type>bool</type>
   </param>
   <param>
+    <name>Bypass</name>
+    <key>bypass</key>
+    <value>False</value>
+    <type>bool</type>
+  </param>
+  <param>
     <name>Reset</name>
     <key>reset</key>
     <value>False</value>
@@ -77,17 +99,24 @@
   <check>$skip &gt;= 0</check>
   <check>$decimation &gt; 0</check>
   <sink>
-    <name>ref</name>
-    <type>$type.output</type>
+    <name>reference</name>
+    <type>$type.input</type>
     <nports>1</nports>
   </sink>
   <sink>
-    <name>in</name>
-    <type>$type.output</type>
+    <name>input</name>
+    <type>$type.input</type>
     <nports>1</nports>
   </sink>
+  <sink>
+    <name>filtered_input</name>
+    <type>$type.input</type>
+    <nports>1</nports>
+    <optional>1</optional>
+    <hide>$filtered_input</hide>
+  </sink>
   <source>
-    <name>out</name>
+    <name>output</name>
     <type>$type.output</type>
     <nports>1</nports>
   </source>

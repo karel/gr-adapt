@@ -53,6 +53,7 @@ class ADAPT_API nlms_filter_cc : virtual public gr::sync_decimator {
      * successive filter updates (unsigned)
      * \param decimation Decimation rate of the filter (unsigned)
      * \param adapt Controls whether filter taps are being updated (bool)
+     * \param bypass Bypass filter (bool)
      * \param reset Reset filter taps (bool)
      */
     static sptr make(bool first_input,
@@ -61,6 +62,7 @@ class ADAPT_API nlms_filter_cc : virtual public gr::sync_decimator {
                      unsigned skip,
                      unsigned decimation,
                      bool adapt,
+                     bool bypass,
                      bool reset);
 
     virtual void set_taps(const std::vector<gr_complex>& taps) = 0;
@@ -71,6 +73,8 @@ class ADAPT_API nlms_filter_cc : virtual public gr::sync_decimator {
     virtual void set_skip(unsigned skip) = 0;
     virtual bool get_adapt() const = 0;
     virtual void set_adapt(bool adapt) = 0;
+    virtual bool get_bypass() const = 0;
+    virtual void set_bypass(bool bypass) = 0;
     virtual bool get_reset() const = 0;
     virtual void set_reset(bool reset) = 0;
 };

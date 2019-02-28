@@ -44,7 +44,7 @@ class lms_filter_ff_impl : public lms_filter_ff, filter::kernel::fir_filter_fff 
     float d_error;
     float d_mu;
     unsigned d_skip, d_i;
-    bool d_adapt, d_reset;
+    bool d_adapt, d_bypass, d_reset;
 
     protected:
     float error(const float& desired, const float& out);
@@ -57,6 +57,7 @@ class lms_filter_ff_impl : public lms_filter_ff, filter::kernel::fir_filter_fff 
                        unsigned skip,
                        unsigned decimation,
                        bool adapt,
+                       bool bypass,
                        bool reset);
     ~lms_filter_ff_impl() = default;
 
@@ -68,6 +69,8 @@ class lms_filter_ff_impl : public lms_filter_ff, filter::kernel::fir_filter_fff 
     void set_skip(unsigned skip) override;
     bool get_adapt() const override;
     void set_adapt(bool adapt) override;
+    bool get_bypass() const override;
+    void set_bypass(bool bypass) override;
     bool get_reset() const override;
     void set_reset(bool reset) override;
 

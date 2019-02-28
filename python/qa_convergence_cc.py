@@ -40,6 +40,7 @@ class qa_convergence_cc (gr_unittest.TestCase):
     skip = 0
     decimation = 1
     adapt = True
+    bypass = False
     reset = False
     n_samples = 1024/2
     n_ensemble = 500
@@ -53,13 +54,13 @@ class qa_convergence_cc (gr_unittest.TestCase):
 
     def test_001_t (self):
         # Create filters
-        lms_filter_cc = adapt.lms_filter_cc(self.first_input, self.n_taps, self.mu_lms, self.skip, self.decimation, self.adapt, self.reset)
+        lms_filter_cc = adapt.lms_filter_cc(self.first_input, self.n_taps, self.mu_lms, self.skip, self.decimation, self.adapt, self.bypass, self.reset)
         y_sink_lms = blocks.vector_sink_c()
         e_sink_lms = blocks.vector_sink_c()
         self.tb.connect((lms_filter_cc, 0), y_sink_lms)
         self.tb.connect((lms_filter_cc, 1), e_sink_lms)
 
-        nlms_filter_cc = adapt.nlms_filter_cc(self.first_input, self.n_taps, self.mu_nlms, self.skip, self.decimation, self.adapt, self.reset)
+        nlms_filter_cc = adapt.nlms_filter_cc(self.first_input, self.n_taps, self.mu_nlms, self.skip, self.decimation, self.adapt, self.bypass, self.reset)
         y_sink_nlms = blocks.vector_sink_c()
         e_sink_nlms = blocks.vector_sink_c()
         self.tb.connect((nlms_filter_cc, 0), y_sink_nlms)

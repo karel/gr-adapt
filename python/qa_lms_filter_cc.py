@@ -32,6 +32,7 @@ class qa_lms_filter_cc (gr_unittest.TestCase):
     skip = 0
     decimation = 1
     adapt = True
+    bypass = False
     reset = False
     n_samples = 1024*2
     n_ensemble = 500
@@ -59,7 +60,7 @@ class qa_lms_filter_cc (gr_unittest.TestCase):
         y_sink_lms = []
         e_sink_lms = []
         for j, _ in enumerate(W):
-            lms_filter_cc.append(adapt.lms_filter_cc(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.reset))
+            lms_filter_cc.append(adapt.lms_filter_cc(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.bypass, self.reset))
             y_sink_lms.append(blocks.vector_sink_c())
             e_sink_lms.append(blocks.vector_sink_c())
             self.tb.connect((lms_filter_cc[j], 0), y_sink_lms[j])
@@ -132,7 +133,7 @@ class qa_lms_filter_cc (gr_unittest.TestCase):
         y_sink_lms = []
         e_sink_lms = []
         for j in range(0, len(mu)):
-            lms_filter_cc.append(adapt.lms_filter_cc(True, self.n_taps, mu[j], self.skip, self.decimation, self.adapt, self.reset))
+            lms_filter_cc.append(adapt.lms_filter_cc(True, self.n_taps, mu[j], self.skip, self.decimation, self.adapt, self.bypass, self.reset))
             y_sink_lms.append(blocks.vector_sink_c())
             e_sink_lms.append(blocks.vector_sink_c())
             self.tb.connect((lms_filter_cc[j], 0), y_sink_lms[j])
@@ -206,7 +207,7 @@ class qa_lms_filter_cc (gr_unittest.TestCase):
 
         d_source = blocks.vector_source_c(d.tolist())
         u_source = blocks.vector_source_c(u.tolist())
-        lms_filter_cc = adapt.lms_filter_cc(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.reset)
+        lms_filter_cc = adapt.lms_filter_cc(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.bypass, self.reset)
         y_sink = blocks.vector_sink_c()
         e_sink = blocks.vector_sink_c()
         self.tb.connect(d_source, (lms_filter_cc, 0))
@@ -245,7 +246,7 @@ class qa_lms_filter_cc (gr_unittest.TestCase):
 
         d_source = blocks.vector_source_c(d.tolist())
         u_source = blocks.vector_source_c(u.tolist())
-        lms_filter_cc = adapt.lms_filter_cc(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.reset)
+        lms_filter_cc = adapt.lms_filter_cc(True, self.n_taps, self.mu, self.skip, self.decimation, self.adapt, self.bypass, self.reset)
         y_sink = blocks.vector_sink_c()
         e_sink = blocks.vector_sink_c()
         self.tb.connect(d_source, (lms_filter_cc, 0))

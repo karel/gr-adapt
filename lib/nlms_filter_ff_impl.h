@@ -44,7 +44,7 @@ class nlms_filter_ff_impl : public nlms_filter_ff, filter::kernel::fir_filter_ff
     float d_error, d_power;
     float d_mu, d_epsilon;
     unsigned d_skip, d_i;
-    bool d_adapt, d_reset;
+    bool d_adapt, d_bypass, d_reset;
 
     protected:
     float error(const float& desired, const float& out);
@@ -57,6 +57,7 @@ class nlms_filter_ff_impl : public nlms_filter_ff, filter::kernel::fir_filter_ff
                         unsigned skip,
                         unsigned decimation,
                         bool adapt,
+                        bool bypass,
                         bool reset);
     ~nlms_filter_ff_impl() = default;
 
@@ -68,6 +69,8 @@ class nlms_filter_ff_impl : public nlms_filter_ff, filter::kernel::fir_filter_ff
     void set_skip(unsigned skip) override;
     bool get_adapt() const override;
     void set_adapt(bool adapt) override;
+    bool get_bypass() const override;
+    void set_bypass(bool bypass) override;
     bool get_reset() const override;
     void set_reset(bool reset) override;
 
