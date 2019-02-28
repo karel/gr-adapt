@@ -125,14 +125,6 @@ bool nlms_filter_cc_impl::get_reset() const { return d_reset; }
 void nlms_filter_cc_impl::set_reset(bool reset) {
     d_reset = reset;
     if (d_reset) {
-        std::cout << "[";
-        for (unsigned i = 0; i < d_taps.size(); i++) {
-            std::cout << std::showpos << d_taps[i].real() << d_taps[i].imag();
-            if (d_taps.size() < (i - 1)) {
-                std::cout << ", ";
-            }
-        }
-        std::cout << "]" << std::endl;
         set_taps(std::vector<gr_complex>(d_taps.size(), gr_complex(0, 0)));
     }
 }
