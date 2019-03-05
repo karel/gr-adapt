@@ -246,7 +246,7 @@ int qrd_rls_filter_cc_impl::work(int noutput_items,
 #ifdef ALIGNED_FIR_FILTER
         out[i] = std::conj(filter(&input[0]));
 #else
-        volk_32f_x2_conjugate_dot_prod_32f(&out[i], &input[k], &d_taps[0], N);
+        volk_32fc_x2_conjugate_dot_prod_32fc(&out[i], &input[k], &d_taps[0], N);
         out[i] = std::conj(out[i]);
 #endif // ALIGNED_FIR_FILTER
 #endif // ARMADILLO_FOUND
