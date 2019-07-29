@@ -17,10 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 install(FILES
-    adapt_lms_filter_xx.xml
-    adapt_nlms_filter_xx.xml
-    adapt_rls_filter_xx.xml
-    adapt_qrd_rls_filter_xx.xml
-    adapt_iqrd_rls_filter_xx.xml
+    adapt_lms_filter_xx.block.yml
+    adapt_nlms_filter_xx.block.yml
+    adapt_rls_filter_xx.block.yml
+    adapt_qrd_rls_filter_xx.block.yml
+    adapt_iqrd_rls_filter_xx.block.yml
     DESTINATION share/gnuradio/grc/blocks
 )

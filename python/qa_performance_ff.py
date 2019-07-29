@@ -1,7 +1,7 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2018 <+YOU OR YOUR COMPANY+>.
+# Copyright 2019 <+YOU OR YOUR COMPANY+>.
 #
 # This is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -131,6 +131,7 @@ class qa_performance_ff (gr_unittest.TestCase):
 
             fig.tight_layout()
             plt.show()
+            plt.savefig(fname='qa_performance_ff.png')
 
 
 if __name__ == '__main__':

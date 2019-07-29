@@ -22,9 +22,10 @@ FIND_LIBRARY(
           /usr/local/lib64
           /usr/lib
           /usr/lib64
-)
+          )
+
+include("${CMAKE_CURRENT_LIST_DIR}/adaptTarget.cmake")
 
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(ADAPT DEFAULT_MSG ADAPT_LIBRARIES ADAPT_INCLUDE_DIRS)
 MARK_AS_ADVANCED(ADAPT_LIBRARIES ADAPT_INCLUDE_DIRS)
-

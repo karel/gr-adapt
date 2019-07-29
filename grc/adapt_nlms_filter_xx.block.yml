@@ -1,0 +1,104 @@
+id: adapt_nlms_filter_xx
+label: NLMS Filter
+category: '[Adaptive Filters]/'
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [cc, ff]
+    option_labels: [Complex, Float]
+    option_attributes:
+        input: [complex, float]
+        output: [complex, float]
+    hide: part
+-   id: first_input
+    label: First Input
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: [Reference, Error]
+-   id: filtered_input
+    label: Filtered Input
+    dtype: enum
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: [Enabled, Disabled]
+    hide: part
+-   id: num_taps
+    label: Num. Taps
+    dtype: int
+    #hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: mu
+    label: "\u03BC"
+    dtype: float
+-   id: skip
+    label: Skip
+    dtype: int
+    default: '0'
+-   id: decimation
+    label: Decimation
+    dtype: int
+    default: '1'
+-   id: adapt
+    label: Adapt
+    dtype: bool
+    default: 'True'
+-   id: bypass
+    label: Bypass
+    dtype: bool
+    default: 'False'
+-   id: reset
+    label: Reset
+    dtype: bool
+    default: 'False'
+
+inputs:
+-   label: reference
+    domain: stream
+    dtype: ${ type.input }
+    multiplicity: '1'
+-   label: input
+    domain: stream
+    dtype: ${ type.input }
+    multiplicity: '1'
+-   label: filtered_input
+    domain: stream
+    dtype: ${ type.input }
+    multiplicity: '1'
+    optional: true
+    hide: ${ filtered_input }
+
+outputs:
+-   label: output
+    domain: stream
+    dtype: ${ type.output }
+    multiplicity: '1'
+-   label: error
+    domain: stream
+    dtype: ${ type.output }
+    multiplicity: '1'
+    optional: true
+-   label: taps
+    domain: stream
+    dtype: ${ type.output }
+    vlen: ${ num_taps }
+    multiplicity: '1'
+    optional: true
+asserts:
+- ${ num_taps > 0 }
+- ${ mu > 0 and mu < 2 }
+- ${ skip >= 0 }
+- ${ decimation > 0 }
+
+templates:
+    imports: import adapt
+    make: adapt.nlms_filter_${type}(${first_input}, ${num_taps}, ${mu}, ${skip}, ${decimation},
+        ${adapt}, ${bypass}, ${reset})
+    callbacks:
+    - set_mu(${mu})
+    - set_skip(${skip})
+    - set_adapt(${adapt})
+    - set_bypass(${bypass})
+    - set_reset(${reset})
+
+file_format: 1
