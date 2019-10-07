@@ -5,12 +5,13 @@ options:
     cmake_opt: ''
     comment: ''
     copyright: ''
-    description: This example demonstrates how to adaptively cancel self-interference.
+    description: This example demonstrates how to apply adaptive filters for signal
+      separation using a structure called an adaptive line enhancer.
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: self_interference_cancellation
+    id: adaptive_line_enhancer
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -21,7 +22,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Self-Interference Cancellation with Adaptive Filters
+    title: Adaptive Line Enhancer
     window_size: ''
   states:
     bus_sink: false
@@ -32,6 +33,27 @@ options:
     state: enabled
 
 blocks:
+- name: frequency
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 2,0,1,1
+    label: Frequency
+    min_len: '10'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: 1e3
+    step: 1e3
+    stop: 1e4
+    value: 2e3
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 12]
+    rotation: 0
+    state: enabled
 - name: gui_adapt
   id: variable_qtgui_check_box
   parameters:
@@ -49,60 +71,18 @@ blocks:
     coordinate: [392, 12]
     rotation: 0
     state: enabled
-- name: gui_amplitude_1
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: 3,1,1,1
-    label: Amplitude 1
-    min_len: '10'
-    orient: Qt.Horizontal
-    rangeType: float
-    start: '0'
-    step: '0.01'
-    stop: '1'
-    value: '1'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1136, 12.0]
-    rotation: 0
-    state: enabled
-- name: gui_amplitude_2
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: 3,2,1,1
-    label: Amplitude 2
-    min_len: '10'
-    orient: Qt.Horizontal
-    rangeType: float
-    start: '0'
-    step: '0.01'
-    stop: '1'
-    value: '1'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1256, 12.0]
-    rotation: 0
-    state: enabled
-- name: gui_delta
+- name: gui_delay
   id: variable_qtgui_range
   parameters:
     comment: ''
     gui_hint: 0,1,1,2
-    label: Delta
-    min_len: '300'
+    label: Delay
+    min_len: '100'
     orient: Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
-    stop: '300'
+    stop: '100'
     value: '1'
     widget: counter_slider
   states:
@@ -110,69 +90,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [664, 12]
-    rotation: 0
-    state: enabled
-- name: gui_frequency_1
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: 2,0,1,1
-    label: Frequency 1
-    min_len: '10'
-    orient: Qt.Horizontal
-    rangeType: float
-    start: 1e3
-    step: 1e3
-    stop: 1e4
-    value: 1e3
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1136, 148.0]
-    rotation: 0
-    state: enabled
-- name: gui_frequency_2
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: 3,0,1,1
-    label: Frequency 2
-    min_len: '10'
-    orient: Qt.Horizontal
-    rangeType: float
-    start: 1e3
-    step: 1e3
-    stop: 1e4
-    value: 2e3
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1256, 148.0]
-    rotation: 0
-    state: enabled
-- name: gui_lambda
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: 1,1,1,2
-    label: Lambda
-    min_len: '100'
-    orient: Qt.Horizontal
-    rangeType: float
-    start: '0.01'
-    step: '0.01'
-    stop: '1'
-    value: '1'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [776, 12]
     rotation: 0
     state: enabled
 - name: gui_lms_mu
@@ -184,37 +101,37 @@ blocks:
     min_len: '100'
     orient: Qt.Horizontal
     rangeType: float
-    start: '0.001'
-    step: '0.01'
+    start: '0.00001'
+    step: '0.00001'
     stop: '1'
-    value: '0.01'
+    value: '0.00001'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, 12]
+    coordinate: [784, 12.0]
     rotation: 0
     state: enabled
-- name: gui_nlms_mu
+- name: gui_noise_amplitude
   id: variable_qtgui_range
   parameters:
     comment: ''
     gui_hint: 1,0,1,1
-    label: NLMS Mu
+    label: Noise
     min_len: '100'
     orient: Qt.Horizontal
     rangeType: float
     start: '0.001'
-    step: '0.01'
-    stop: '2'
-    value: '1'
+    step: '0.001'
+    stop: '1'
+    value: '0.03'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1016, 12]
+    coordinate: [912, 12.0]
     rotation: 0
     state: enabled
 - name: gui_reset
@@ -238,7 +155,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '16'
+    value: '128'
   states:
     bus_sink: false
     bus_source: false
@@ -258,7 +175,7 @@ blocks:
     coordinate: [176, 12]
     rotation: 0
     state: enabled
-- name: adapt_lms_filter_xx_1
+- name: adapt_lms_filter_xx_0
   id: adapt_lms_filter_xx
   parameters:
     adapt: 'True'
@@ -280,15 +197,15 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [704, 404.0]
+    coordinate: [832, 444.0]
     rotation: 0
-    state: enabled
+    state: true
 - name: analog_noise_source_x_0
   id: analog_noise_source_x
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.001'
+    amp: gui_noise_amplitude
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -299,39 +216,17 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 180.0]
+    coordinate: [64, 436.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: analog_sig_source_x_0
   id: analog_sig_source_x
   parameters:
     affinity: ''
     alias: ''
-    amp: gui_amplitude_1
+    amp: '1'
     comment: ''
-    freq: gui_frequency_1
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    offset: '0'
-    phase: '0'
-    samp_rate: samp_rate
-    type: float
-    waveform: analog.GR_SIN_WAVE
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [80, 428.0]
-    rotation: 0
-    state: enabled
-- name: analog_sig_source_x_1
-  id: analog_sig_source_x
-  parameters:
-    affinity: ''
-    alias: ''
-    amp: gui_amplitude_2
-    comment: ''
-    freq: gui_frequency_2
+    freq: frequency
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
@@ -343,7 +238,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [80, 268.0]
+    coordinate: [40, 300.0]
     rotation: 0
     state: enabled
 - name: blocks_add_xx_0
@@ -354,16 +249,35 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    num_inputs: '3'
+    num_inputs: '2'
     type: float
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [584, 224.0]
+    coordinate: [272, 376.0]
     rotation: 0
     state: enabled
+- name: blocks_delay_0
+  id: blocks_delay
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    delay: gui_delay
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [672, 412.0]
+    rotation: 0
+    state: true
 - name: blocks_throttle_0
   id: blocks_throttle
   parameters:
@@ -380,26 +294,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [328, 292.0]
-    rotation: 0
-    state: enabled
-- name: fir_filter_xxx_0
-  id: fir_filter_xxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    decim: '1'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samp_delay: '0'
-    taps: '[1, 0.5, 0.3, 0.9]'
-    type: fff
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [304, 364.0]
+    coordinate: [352, 388.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -431,18 +326,18 @@ blocks:
     color7: '"yellow"'
     color8: '"dark red"'
     color9: '"dark green"'
-    comment: Error signal is the output without self-interference.
+    comment: ''
     ctrlpanel: 'False'
     fc: '0'
     fftsize: '1024'
-    freqhalf: 'True'
+    freqhalf: 'False'
     grid: 'False'
     gui_hint: 7,0,3,3
     label: Relative Gain
     label1: Input
     label10: ''
-    label2: Reference
-    label3: Out
+    label2: Output
+    label3: Error
     label4: Error
     label5: ''
     label6: ''
@@ -453,7 +348,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     name: '""'
-    nconnections: '4'
+    nconnections: '3'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -479,9 +374,106 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [984, 280.0]
+    coordinate: [1168, 216.0]
     rotation: 0
     state: enabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'True'
+    gui_hint: 3,0,3,3
+    label1: Input
+    label10: Signal 10
+    label2: Output
+    label3: Error
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '3'
+    size: '512'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 384.0]
+    rotation: 0
+    state: true
 - name: qtgui_vector_sink_f_0
   id: qtgui_vector_sink_f
   parameters:
@@ -510,8 +502,8 @@ blocks:
     color8: '"dark red"'
     color9: '"dark green"'
     comment: ''
-    grid: 'True'
-    gui_hint: 4,0,3,3
+    grid: 'False'
+    gui_hint: 3,0,3,3
     label1: ''
     label10: ''
     label2: ''
@@ -552,23 +544,23 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [992, 524.0]
+    coordinate: [1312, 716.0]
     rotation: 0
-    state: enabled
+    state: disabled
 
 connections:
-- [adapt_lms_filter_xx_1, '0', qtgui_freq_sink_x_0, '2']
-- [adapt_lms_filter_xx_1, '1', qtgui_freq_sink_x_0, '3']
-- [adapt_lms_filter_xx_1, '2', qtgui_vector_sink_f_0, '0']
-- [analog_noise_source_x_0, '0', blocks_add_xx_0, '0']
-- [analog_sig_source_x_0, '0', adapt_lms_filter_xx_1, '1']
-- [analog_sig_source_x_0, '0', fir_filter_xxx_0, '0']
-- [analog_sig_source_x_0, '0', qtgui_freq_sink_x_0, '0']
-- [analog_sig_source_x_1, '0', blocks_throttle_0, '0']
-- [blocks_add_xx_0, '0', adapt_lms_filter_xx_1, '0']
-- [blocks_add_xx_0, '0', qtgui_freq_sink_x_0, '1']
-- [blocks_throttle_0, '0', blocks_add_xx_0, '1']
-- [fir_filter_xxx_0, '0', blocks_add_xx_0, '2']
+- [adapt_lms_filter_xx_0, '0', qtgui_freq_sink_x_0, '1']
+- [adapt_lms_filter_xx_0, '0', qtgui_time_sink_x_0, '1']
+- [adapt_lms_filter_xx_0, '1', qtgui_freq_sink_x_0, '2']
+- [adapt_lms_filter_xx_0, '1', qtgui_time_sink_x_0, '2']
+- [analog_noise_source_x_0, '0', blocks_add_xx_0, '1']
+- [analog_sig_source_x_0, '0', blocks_add_xx_0, '0']
+- [blocks_add_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_delay_0, '0', adapt_lms_filter_xx_0, '0']
+- [blocks_throttle_0, '0', adapt_lms_filter_xx_0, '1']
+- [blocks_throttle_0, '0', blocks_delay_0, '0']
+- [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
+- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '0']
 
 metadata:
   file_format: 1

@@ -36,7 +36,7 @@ In the [examples](./examples) directory, three examples of using adaptive filter
     - gnuradio-runtime
     - gnuradio-filter
 - [VOLK](http://libvolk.org/)
-- CMake 3.1
+- CMake 3.8
 - [Armadillo](http://arma.sourceforge.net/) (optional*)
 
 \* RLS filters based on QR decomposition currently require Armadillo to work. If gr-adapt is built without Armadillo, those filters do nothing.
