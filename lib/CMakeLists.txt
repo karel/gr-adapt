@@ -46,7 +46,8 @@ add_library(gnuradio-adapt SHARED ${adapt_sources})
 target_link_libraries(gnuradio-adapt gnuradio::gnuradio-runtime
   gnuradio::gnuradio-filter
   gnuradio::gnuradio-blocks
-  gnuradio::gnuradio-fft)
+  gnuradio::gnuradio-fft
+  ${VOLK_LIBRARIES})
 if(LAPACK_FOUND)
 	target_link_libraries(gnuradio-adapt ${LAPACK_LIBRARIES} ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES})
 endif(LAPACK_FOUND)
