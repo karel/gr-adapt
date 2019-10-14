@@ -23,8 +23,9 @@ There are several tests regarding performance and convergence of the provided fi
 
 ### Examples
 
-In the [examples](./examples) directory, three examples of using adaptive filter blocks are given for the following use cases:
+In the [examples](./examples) directory, examples of using adaptive filter blocks are given for the following use cases:
 
+- Adaptive line enhancer
 - Self-interference cancellation
 - System identification
 - Time delay estimation

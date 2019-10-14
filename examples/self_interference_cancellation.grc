@@ -435,8 +435,8 @@ blocks:
     ctrlpanel: 'False'
     fc: '0'
     fftsize: '1024'
-    freqhalf: 'True'
-    grid: 'False'
+    freqhalf: 'False'
+    grid: 'True'
     gui_hint: 7,0,3,3
     label: Relative Gain
     label1: Input

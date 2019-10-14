@@ -331,7 +331,7 @@ blocks:
     fc: '0'
     fftsize: '1024'
     freqhalf: 'False'
-    grid: 'False'
+    grid: 'True'
     gui_hint: 7,0,3,3
     label: Relative Gain
     label1: Input
