@@ -47,13 +47,12 @@ target_link_libraries(gnuradio-adapt gnuradio::gnuradio-runtime
   gnuradio::gnuradio-filter
   gnuradio::gnuradio-blocks
   gnuradio::gnuradio-fft
-  ${VOLK_LIBRARIES})
-if(LAPACK_FOUND)
-	target_link_libraries(gnuradio-adapt ${LAPACK_LIBRARIES} ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES})
-endif(LAPACK_FOUND)
-if(ARMADILLO_FOUND)
-	target_link_libraries(gnuradio-adapt ${ARMADILLO_LIBRARIES} ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES})
-endif(ARMADILLO_FOUND)
+  ${VOLK_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${GNURADIO_ALL_LIBRARIES})
+if(LAPACK_FOUND AND ARMADILLO_FOUND)
+	target_link_libraries(gnuradio-adapt ${LAPACK_LIBRARIES} ${ARMADILLO_LIBRARIES} )
+endif(LAPACK_FOUND AND ARMADILLO_FOUND)
 target_include_directories(gnuradio-adapt
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     PUBLIC $<INSTALL_INTERFACE:include>
