@@ -154,6 +154,7 @@ endif()
 ########################################################################
 # Find gr-adapt build dependencies
 ########################################################################
+find_package(Volk REQUIRED)
 find_package(LAPACK)
 find_package(Armadillo)
 
