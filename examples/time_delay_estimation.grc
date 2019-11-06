@@ -156,27 +156,6 @@ blocks:
     coordinate: [1152, 12]
     rotation: 0
     state: enabled
-- name: gui_nlms_mu
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: 1,0,1,1
-    label: NLMS Mu
-    min_len: '100'
-    orient: Qt.Horizontal
-    rangeType: float
-    start: '0.001'
-    step: '0.01'
-    stop: '2'
-    value: '1'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1160, 140]
-    rotation: 0
-    state: enabled
 - name: gui_reset
   id: variable_qtgui_check_box
   parameters:
@@ -242,7 +221,7 @@ blocks:
 - name: adapt_lms_filter_xx_1
   id: adapt_lms_filter_xx
   parameters:
-    adapt: 'True'
+    adapt: gui_adapt
     affinity: ''
     alias: ''
     bypass: 'False'
@@ -254,14 +233,14 @@ blocks:
     minoutbuf: '0'
     mu: gui_lms_mu
     num_taps: n_taps
-    reset: 'False'
+    reset: gui_reset
     skip: '0'
     type: cc
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [704, 240.0]
+    coordinate: [888, 308.0]
     rotation: 0
     state: true
 - name: analog_noise_source_x_0
@@ -280,7 +259,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 368.0]
+    coordinate: [16, 364.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -336,7 +315,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [928, 456.0]
+    coordinate: [1128, 464.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_0
@@ -355,7 +334,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [272, 196.0]
+    coordinate: [512, 196.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_xx_0
@@ -373,7 +352,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 196.0]
+    coordinate: [608, 196.0]
     rotation: 0
     state: enabled
 - name: blocks_throttle_0
@@ -502,7 +481,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 168.0]
+    coordinate: [1160, 176.0]
     rotation: 0
     state: enabled
 - name: qtgui_vector_sink_f_0
@@ -575,7 +554,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1112, 428.0]
+    coordinate: [1320, 436.0]
     rotation: 0
     state: enabled
 

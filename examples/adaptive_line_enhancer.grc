@@ -178,7 +178,7 @@ blocks:
 - name: adapt_lms_filter_xx_0
   id: adapt_lms_filter_xx
   parameters:
-    adapt: 'True'
+    adapt: gui_adapt
     affinity: ''
     alias: ''
     bypass: 'False'
@@ -190,7 +190,7 @@ blocks:
     minoutbuf: '0'
     mu: gui_lms_mu
     num_taps: n_taps
-    reset: 'False'
+    reset: gui_reset
     skip: '0'
     type: ff
   states:
@@ -474,79 +474,6 @@ blocks:
     coordinate: [1168, 384.0]
     rotation: 0
     state: true
-- name: qtgui_vector_sink_f_0
-  id: qtgui_vector_sink_f
-  parameters:
-    affinity: ''
-    alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'False'
-    average: '1.0'
-    color1: '"blue"'
-    color10: '"dark blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
-    comment: ''
-    grid: 'False'
-    gui_hint: 3,0,3,3
-    label1: ''
-    label10: ''
-    label2: ''
-    label3: ''
-    label4: ''
-    label5: ''
-    label6: ''
-    label7: ''
-    label8: ''
-    label9: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    name: '""'
-    nconnections: '1'
-    ref_level: '0'
-    showports: 'True'
-    update_time: '0.10'
-    vlen: n_taps
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    x_axis_label: '"x-Axis"'
-    x_start: '0'
-    x_step: '1.0'
-    x_units: '""'
-    y_axis_label: '"y-Axis"'
-    y_units: '""'
-    ymax: '1'
-    ymin: '-1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1312, 716.0]
-    rotation: 0
-    state: disabled
 
 connections:
 - [adapt_lms_filter_xx_0, '0', qtgui_freq_sink_x_0, '1']

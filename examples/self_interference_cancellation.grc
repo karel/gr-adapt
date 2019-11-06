@@ -46,7 +46,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [392, 12]
+    coordinate: [272, 12.0]
     rotation: 0
     state: enabled
 - name: gui_amplitude_1
@@ -67,7 +67,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1136, 12.0]
+    coordinate: [904, 12.0]
     rotation: 0
     state: enabled
 - name: gui_amplitude_2
@@ -88,7 +88,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1256, 12.0]
+    coordinate: [1032, 12.0]
     rotation: 0
     state: enabled
 - name: gui_delta
@@ -109,7 +109,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [664, 12]
+    coordinate: [544, 12.0]
     rotation: 0
     state: enabled
 - name: gui_frequency_1
@@ -130,7 +130,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1136, 148.0]
+    coordinate: [1160, 12.0]
     rotation: 0
     state: enabled
 - name: gui_frequency_2
@@ -151,7 +151,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1256, 148.0]
+    coordinate: [1288, 12.0]
     rotation: 0
     state: enabled
 - name: gui_lambda
@@ -172,7 +172,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [776, 12]
+    coordinate: [656, 12.0]
     rotation: 0
     state: enabled
 - name: gui_lms_mu
@@ -193,28 +193,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, 12]
-    rotation: 0
-    state: enabled
-- name: gui_nlms_mu
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: 1,0,1,1
-    label: NLMS Mu
-    min_len: '100'
-    orient: Qt.Horizontal
-    rangeType: float
-    start: '0.001'
-    step: '0.01'
-    stop: '2'
-    value: '1'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1016, 12]
+    coordinate: [768, 12.0]
     rotation: 0
     state: enabled
 - name: gui_reset
@@ -231,7 +210,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 12]
+    coordinate: [408, 12.0]
     rotation: 0
     state: enabled
 - name: n_taps
@@ -261,7 +240,7 @@ blocks:
 - name: adapt_lms_filter_xx_1
   id: adapt_lms_filter_xx
   parameters:
-    adapt: 'True'
+    adapt: gui_adapt
     affinity: ''
     alias: ''
     bypass: 'False'
@@ -273,7 +252,7 @@ blocks:
     minoutbuf: '0'
     mu: gui_lms_mu
     num_taps: n_taps
-    reset: 'False'
+    reset: gui_reset
     skip: '0'
     type: ff
   states:
