@@ -41,7 +41,7 @@ class ADAPT_API nlms_filter_cc : virtual public gr::sync_decimator {
     virtual void update_tap(gr_complex& tap, const gr_complex& in) = 0;
 
     public:
-    typedef boost::shared_ptr<nlms_filter_cc> sptr;
+    typedef std::shared_ptr<nlms_filter_cc> sptr;
 
     /*!
      * Make a NLMS adaptive filter

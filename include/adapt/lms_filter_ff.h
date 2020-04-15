@@ -41,7 +41,7 @@ class ADAPT_API lms_filter_ff : virtual public gr::sync_decimator {
     virtual void update_tap(float& tap, const float& in) = 0;
 
     public:
-    typedef boost::shared_ptr<lms_filter_ff> sptr;
+    typedef std::shared_ptr<lms_filter_ff> sptr;
 
     /*!
      * Make an LMS adaptive filter

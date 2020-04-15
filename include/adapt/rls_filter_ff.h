@@ -37,7 +37,7 @@ namespace adapt {
  */
 class ADAPT_API rls_filter_ff : virtual public gr::sync_decimator {
     public:
-    typedef boost::shared_ptr<rls_filter_ff> sptr;
+    typedef std::shared_ptr<rls_filter_ff> sptr;
 
     /*!
      * Make a RLS adaptive filter
