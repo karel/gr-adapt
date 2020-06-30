@@ -38,6 +38,7 @@ In the [examples](./examples) directory, examples of using adaptive filter block
     - gnuradio-filter
 - [VOLK](http://libvolk.org/)
 - CMake 3.8
+- [pybind11](https://github.com/pybind/pybind11)
 - [Armadillo](http://arma.sourceforge.net/) (optional*)
 
 \* RLS filters based on QR decomposition currently require Armadillo to work. If gr-adapt is built without Armadillo, those filters do nothing.
