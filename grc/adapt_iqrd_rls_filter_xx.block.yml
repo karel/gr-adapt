@@ -19,7 +19,7 @@ parameters:
 -   id: delta
     label: "\u03B4"
     dtype: float
--   id: lambda
+-   id: _lambda
     label: "\u03BB"
     dtype: float
 -   id: skip
@@ -68,17 +68,17 @@ outputs:
 asserts:
 - ${ num_taps > 0 }
 - ${ delta > 0 and delta <= 300 }
-- ${ lambda > 0 and lambda <= 1 }
+- ${ _lambda > 0 and _lambda <= 1 }
 - ${ skip >= 0 }
 - ${ decimation > 0 }
 
 templates:
     imports: import adapt
-    make: adapt.iqrd_rls_filter_${type}(${num_taps}, ${delta}, ${lambda}, ${skip},
+    make: adapt.iqrd_rls_filter_${type}(${num_taps}, ${delta}, ${_lambda}, ${skip},
         ${decimation}, ${adapt}, ${reset})
     callbacks:
     - set_delta(${delta})
-    - set_lambda(${lambda})
+    - set_lambda(${_lambda})
     - set_skip(${skip})
     - set_adapt(${adapt})
     - set_reset(${reset})
