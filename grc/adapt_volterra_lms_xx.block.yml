@@ -1,0 +1,70 @@
+id: adapt_volterra_lms_xx
+label: Volterra LMS Filter
+category: '[Adaptive Filters]/'
+
+templates:
+    imports: import adapt
+    make: adapt.volterra_lms_${type}(${num_taps},${mu1}, ${mu2}, ${adapt}, ${bypass}, ${reset})
+    callbacks: 
+    - set_mu1(${mu1})
+    - set_mu2(${mu2})
+    - set_adapt(${adapt})
+    - set_bypass(${bypass})
+    - set_reset(${reset})
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [cc, ff]
+    option_labels: [Complex, Float]
+    option_attributes:
+        input: [complex, float]
+        output: [complex, float]
+    hide: part
+-   id: num_taps
+    label: Num. Taps
+    dtype: int
+-   id: mu1
+    label: "\u03BC 1"
+    dtype: float
+    default: '0.5'
+-   id: mu2
+    label: "\u03BC 2"
+    dtype: float
+    default: '0.5'
+-   id: adapt
+    label: Adapt
+    dtype: bool
+    default: 'True'
+-   id: bypass
+    label: Bypass
+    dtype: bool
+    default: 'False'
+-   id: reset
+    label: Reset
+    dtype: bool
+    default: 'False'
+
+inputs:
+-   label: reference
+    domain: stream
+    dtype: ${ type.input }
+    multiplicity: '1'
+-   label: input
+    domain: stream
+    dtype: ${ type.input }
+    multiplicity: '1'
+
+outputs:
+-   label: output
+    domain: stream
+    dtype: ${ type.output }
+    multiplicity: '1'
+-   label: error
+    domain: stream
+    dtype: ${ type.output }
+    multiplicity: '1'
+    optional: true
+
+file_format: 1

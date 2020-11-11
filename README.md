@@ -12,6 +12,7 @@ The following filters are provided:
 
 * Least mean squares (__LMS__)
 * Normalized least mean squares (__NLMS__)
+* Volterra least mean squares (__VLMS__)
 * Recursive least squares (__RLS__)
 * Recursive least squares employing QR decomposition (__QRD-RLS__ and __IQRD-RLS__)
 

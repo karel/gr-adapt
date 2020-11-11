@@ -22,4 +22,6 @@ except ImportError:
     from .adapt_python import *
 
 # import any pure python here
+from .volterra_lms_ff import volterra_lms_ff
+from .volterra_lms_cc import volterra_lms_cc
 #

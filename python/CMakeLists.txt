@@ -22,7 +22,8 @@ add_subdirectory(bindings)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/adapt
+    volterra_lms_ff.py
+    volterra_lms_cc.py DESTINATION ${GR_PYTHON_DIR}/adapt
 )
 
 ########################################################################
@@ -46,3 +47,5 @@ GR_ADD_TEST(qa_convergence_cc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/q
 GR_ADD_TEST(qa_performance_ff ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_performance_ff.py)
 GR_ADD_TEST(qa_performance_cc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_performance_cc.py)
 GR_ADD_TEST(qa_performance_xx ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_performance_xx.py)
+GR_ADD_TEST(qa_volterra_lms_ff ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_volterra_lms_ff.py)
+GR_ADD_TEST(qa_volterra_lms_cc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_volterra_lms_cc.py)
