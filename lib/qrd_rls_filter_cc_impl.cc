@@ -48,7 +48,7 @@ qrd_rls_filter_cc_impl::qrd_rls_filter_cc_impl(int num_taps,
                                                    sizeof(gr_complex),
                                                    num_taps * int(sizeof(gr_complex))}),
           decimation),
-      fir_filter_ccc(decimation, std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
+      fir_filter_ccc(std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
       d_updated(false), d_skip(skip), d_i(0), d_adapt(adapt), d_reset(false) {
     set_delta(delta);
     set_lambda(lambda);
