@@ -51,7 +51,7 @@ lms_filter_cc_impl::lms_filter_cc_impl(bool first_input,
                                                    sizeof(gr_complex),
                                                    num_taps * int(sizeof(gr_complex))}),
           decimation),
-      fir_filter_ccc(decimation, std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
+      fir_filter_ccc(std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
       d_first_input(first_input), d_updated(false), d_skip(skip), d_i(0), d_adapt(adapt),
       d_bypass(bypass), d_reset(false) {
     set_mu(mu);

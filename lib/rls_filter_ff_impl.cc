@@ -47,7 +47,7 @@ rls_filter_ff_impl::rls_filter_ff_impl(bool first_input,
           gr::io_signature::makev(
               1, 3, std::vector<int>{sizeof(float), sizeof(float), num_taps * int(sizeof(float))}),
           decimation),
-      fir_filter_fff(decimation, std::vector<float>(num_taps, 0.0)), d_first_input(first_input),
+      fir_filter_fff(std::vector<float>(num_taps, 0.0)), d_first_input(first_input),
       d_updated(false), d_delta(0.5), d_lambda(0.9), d_skip(skip), d_i(0), d_adapt(adapt),
       d_reset(false) {
     set_delta(delta);

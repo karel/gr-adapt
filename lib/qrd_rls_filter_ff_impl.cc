@@ -45,7 +45,7 @@ qrd_rls_filter_ff_impl::qrd_rls_filter_ff_impl(int num_taps,
           gr::io_signature::makev(
               1, 3, std::vector<int>{sizeof(float), sizeof(float), num_taps * int(sizeof(float))}),
           decimation),
-      fir_filter_fff(decimation, std::vector<float>(num_taps, 0.0)), d_updated(false), d_skip(skip),
+      fir_filter_fff(std::vector<float>(num_taps, 0.0)), d_updated(false), d_skip(skip),
       d_i(0), d_adapt(adapt), d_reset(false) {
     set_delta(delta);
     set_lambda(lambda);
