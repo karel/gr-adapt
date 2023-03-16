@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Pärlin"
+  given-names: "Karel"
+  orcid: "https://orcid.org/0000-0002-6105-5916"
+title: "gr-adapt"
+date-released: 2018-06-24
+url: "https://github.com/karel/gr-adapt"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Pärlin"
+    given-names: "Karel"
+    orcid: "https://orcid.org/0000-0002-6105-5916"
+  - family-names: "Riihonen"
+    given-names: "Taneli"
+    orcid: "https://orcid.org/0000-0001-5416-5263"
+  - family-names: "Le Nir"
+    given-names: "Vincent"
+    orcid: "https://orcid.org/0000-0001-8304-9173"
+  - family-names: "Adrat"
+    given-names: "Marc"
+  #doi: "??"
+  journal: "IEEE Transactions on Signal Processing"
+  #month: ??
+  #start: ?? # First page number
+  #end: ?? # Last page number
+  title: "Estimating and Tracking Wireless Channels under Carrier and Sampling Frequency Offsets"
+  #issue: ??
+  #volume: ??
+  year: 2023

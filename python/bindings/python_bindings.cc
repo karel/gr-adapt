@@ -21,16 +21,17 @@ namespace py = pybind11;
 /* Please do not delete
 /**************************************/
 // BINDING_FUNCTION_PROTOTYPES(
-    void bind_lms_filter_ff(py::module& m);
-    void bind_lms_filter_cc(py::module& m);
-    void bind_nlms_filter_ff(py::module& m);
-    void bind_nlms_filter_cc(py::module& m);
-    void bind_qrd_rls_filter_ff(py::module& m);
-    void bind_qrd_rls_filter_cc(py::module& m);
-    void bind_rls_filter_ff(py::module& m);
-    void bind_rls_filter_cc(py::module& m);
-    void bind_iqrd_rls_filter_ff(py::module& m);
-    void bind_iqrd_rls_filter_cc(py::module& m);
+void bind_lms_filter_ff(py::module& m);
+void bind_lms_filter_cc(py::module& m);
+void bind_nlms_filter_ff(py::module& m);
+void bind_nlms_filter_cc(py::module& m);
+void bind_qrd_rls_filter_ff(py::module& m);
+void bind_qrd_rls_filter_cc(py::module& m);
+void bind_rls_filter_ff(py::module& m);
+void bind_rls_filter_cc(py::module& m);
+void bind_iqrd_rls_filter_ff(py::module& m);
+void bind_iqrd_rls_filter_cc(py::module& m);
+void bind_fo_lms_cc(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -38,14 +39,12 @@ namespace py = pybind11;
 // for newer Python versions.
 // This function is also necessary because it ensures access to the C API
 // and removes a warning.
-void* init_numpy()
-{
+void* init_numpy() {
     import_array();
     return NULL;
 }
 
-PYBIND11_MODULE(adapt_python, m)
-{
+PYBIND11_MODULE(adapt_python, m) {
     // Initialize the numpy C API
     // (otherwise we will see segmentation faults)
     init_numpy();
@@ -69,5 +68,6 @@ PYBIND11_MODULE(adapt_python, m)
     bind_rls_filter_cc(m);
     bind_iqrd_rls_filter_ff(m);
     bind_iqrd_rls_filter_cc(m);
+    bind_fo_lms_cc(m);
     // ) END BINDING_FUNCTION_CALLS
 }

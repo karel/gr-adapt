@@ -26,7 +26,8 @@ list(APPEND adapt_python_files
     rls_filter_ff_python.cc
     rls_filter_cc_python.cc
     iqrd_rls_filter_ff_python.cc
-    iqrd_rls_filter_cc_python.cc python_bindings.cc)
+    iqrd_rls_filter_cc_python.cc
+    fo_lms_cc_python.cc python_bindings.cc)
 
 GR_PYBIND_MAKE_OOT(adapt 
    ../..

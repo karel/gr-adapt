@@ -22,5 +22,6 @@ install(FILES
     adapt_rls_filter_xx.block.yml
     adapt_qrd_rls_filter_xx.block.yml
     adapt_iqrd_rls_filter_xx.block.yml
+    adapt_fo_lms_cc.block.yml
     DESTINATION share/gnuradio/grc/blocks
 )

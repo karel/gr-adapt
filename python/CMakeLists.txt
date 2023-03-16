@@ -46,3 +46,4 @@ GR_ADD_TEST(qa_convergence_cc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/q
 GR_ADD_TEST(qa_performance_ff ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_performance_ff.py)
 GR_ADD_TEST(qa_performance_cc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_performance_cc.py)
 GR_ADD_TEST(qa_performance_xx ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_performance_xx.py)
+GR_ADD_TEST(qa_fo_lms_cc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_fo_lms_cc.py)
