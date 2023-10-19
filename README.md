@@ -19,7 +19,7 @@ The LMS and NLMS filters take an optional third input, which, if provided, will 
 
 * Frequency offsets least mean squares (__FO-LMS__)[^1]
 
-[^1]: K. Pärlin, T. Riihonen, V. L. Nir, and M. Adrat, “Estimating and Tracking Wireless Channels under Carrier and Sampling Frequency Offsets,” IEEE Transactions on Signal Processing, 2023, in press.
+[^1]: K. Pärlin, T. Riihonen, V. L. Nir, and M. Adrat, “Estimating and Tracking Wireless Channels under Carrier and Sampling Frequency Offsets,” IEEE Transactions on Signal Processing, vol. 71, pp. 1053&ndash;1066, Mar. 2023.
 
 ### Tests
 

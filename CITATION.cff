@@ -21,12 +21,11 @@ preferred-citation:
     orcid: "https://orcid.org/0000-0001-8304-9173"
   - family-names: "Adrat"
     given-names: "Marc"
-  #doi: "??"
+  doi: 10.1109/TSP.2023.3259140
   journal: "IEEE Transactions on Signal Processing"
-  #month: ??
-  #start: ?? # First page number
-  #end: ?? # Last page number
+  month: 3
+  start: 1053
+  end: 1066
   title: "Estimating and Tracking Wireless Channels under Carrier and Sampling Frequency Offsets"
-  #issue: ??
-  #volume: ??
+  volume: 71
   year: 2023
