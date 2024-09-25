@@ -103,6 +103,8 @@ int fo_lms_cc_impl::general_work(int noutput_items,
         d_p += d_cfo;
         if (d_p >= 2 * M_PI) {
             d_p -= 2 * M_PI;
+        } else if (d_p <= -2 * M_PI) {
+            d_p += 2 * M_PI;
         }
         d_t += (1.0 / d_samp_rate) * d_sfo;
         if (d_t > 1.0) {
