@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(fo_lms_cc.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e6bb8a614dee55048f6f6081d83f6c90)                     */
+/* BINDTOOL_HEADER_FILE_HASH(d8e04670df339af2cd4d1eedc59b202a)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -41,6 +41,8 @@ void bind_fo_lms_cc(py::module& m) {
              py::arg("mu_cir"),
              py::arg("mu_cfo"),
              py::arg("mu_sfo"),
+             py::arg("adapt"),
+             py::arg("reset"),
              D(fo_lms_cc, make))
 
 
@@ -60,6 +62,18 @@ void bind_fo_lms_cc(py::module& m) {
 
 
         .def("set_mu_sfo", &fo_lms_cc::set_mu_sfo, py::arg("mu_sfo"), D(fo_lms_cc, set_mu_sfo))
+
+
+        .def("get_adapt", &fo_lms_cc::get_adapt, D(fo_lms_cc, get_adapt))
+
+
+        .def("set_adapt", &fo_lms_cc::set_adapt, py::arg("adapt"), D(fo_lms_cc, set_adapt))
+
+
+        .def("get_reset", &fo_lms_cc::get_reset, D(fo_lms_cc, get_reset))
+
+
+        .def("set_reset", &fo_lms_cc::set_reset, py::arg("reset"), D(fo_lms_cc, set_reset))
 
         ;
 }

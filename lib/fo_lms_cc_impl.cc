@@ -22,17 +22,28 @@ using namespace filter::kernel;
 
 using input_type = gr_complex;
 using output_type = gr_complex;
-fo_lms_cc::sptr
-fo_lms_cc::make(double samp_rate, int num_taps, float mu_cir, float mu_cfo, float mu_sfo) {
-    return gnuradio::make_block_sptr<fo_lms_cc_impl>(samp_rate, num_taps, mu_cir, mu_cfo, mu_sfo);
+fo_lms_cc::sptr fo_lms_cc::make(double samp_rate,
+                                int num_taps,
+                                float mu_cir,
+                                float mu_cfo,
+                                float mu_sfo,
+                                bool adapt,
+                                bool reset) {
+    return gnuradio::make_block_sptr<fo_lms_cc_impl>(
+        samp_rate, num_taps, mu_cir, mu_cfo, mu_sfo, adapt, reset);
 }
 
 
 /*
  * The private constructor
  */
-fo_lms_cc_impl::fo_lms_cc_impl(
-    double samp_rate, int num_taps, float mu_cir, float mu_cfo, float mu_sfo)
+fo_lms_cc_impl::fo_lms_cc_impl(double samp_rate,
+                               int num_taps,
+                               float mu_cir,
+                               float mu_cfo,
+                               float mu_sfo,
+                               bool adapt,
+                               bool reset)
     : gr::block("fo_lms_cc",
                 gr::io_signature::make(2, 2, sizeof(input_type)),
                 gr::io_signature::makev(
@@ -41,7 +52,7 @@ fo_lms_cc_impl::fo_lms_cc_impl(
                     std::vector<int>{
                         sizeof(output_type), sizeof(output_type), sizeof(float), sizeof(float)})),
       fir_filter_ccc(std::vector<gr_complex>(num_taps, gr_complex(0, 0))), d_samp_rate(samp_rate),
-      d_mu_cir(mu_cir), d_mu_cfo(mu_cfo), d_mu_sfo(mu_sfo) {
+      d_mu_cir(mu_cir), d_mu_cfo(mu_cfo), d_mu_sfo(mu_sfo), d_adapt(adapt), d_reset(false) {
     const int alignment_multiple = volk_get_alignment() / sizeof(input_type);
     set_alignment(std::max(1, alignment_multiple));
 
@@ -70,6 +81,20 @@ float fo_lms_cc_impl::get_mu_sfo() const { return d_mu_sfo; }
 
 void fo_lms_cc_impl::set_mu_sfo(float mu_sfo) { d_mu_sfo = mu_sfo; }
 
+bool fo_lms_cc_impl::get_adapt() const { return d_adapt; }
+
+void fo_lms_cc_impl::set_adapt(bool adapt) { d_adapt = adapt; }
+
+bool fo_lms_cc_impl::get_reset() const { return d_reset; }
+
+void fo_lms_cc_impl::set_reset(bool reset) {
+    d_reset = reset;
+    if (d_reset) {
+        d_new_taps = std::vector<gr_complex>(d_taps.size(), gr_complex(0, 0));
+        d_updated = true;
+    }
+}
+
 gr_complex fo_lms_cc_impl::error(const gr_complex& desired, const gr_complex& out) {
     return desired - out;
 }
@@ -93,6 +118,14 @@ int fo_lms_cc_impl::general_work(int noutput_items,
     auto cfo_out = static_cast<float*>(output_items[2]);
     auto sfo_out = static_cast<float*>(output_items[3]);
 
+    if (d_updated) {
+        d_cfo = 0;
+        d_sfo = 0;
+        d_taps = d_new_taps;
+        d_updated = false;
+        return 0;
+    }
+
     size_t l = d_taps.size();
     int m = 0;
     int i = 0;
@@ -101,10 +134,10 @@ int fo_lms_cc_impl::general_work(int noutput_items,
 
         // Increment the phase and time counters.
         d_p += d_cfo;
-        if (d_p >= 2 * M_PI) {
-            d_p -= 2 * M_PI;
-        } else if (d_p <= -2 * M_PI) {
-            d_p += 2 * M_PI;
+        if (d_p >= 2 * M_PIl) {
+            d_p -= 2 * M_PIl;
+        } else if (d_p <= -2 * M_PIl) {
+            d_p += 2 * M_PIl;
         }
         d_t += (1.0 / d_samp_rate) * d_sfo;
         if (d_t > 1.0) {
@@ -135,12 +168,6 @@ int fo_lms_cc_impl::general_work(int noutput_items,
             error_out[i] = d_error;
         }
 
-        // Update the filter coefficients.
-        for (int k = 0; k < l; k++) {
-            // Update tap locally from error.
-            update_tap(d_taps[k], d_y_0[k]);
-        }
-
         // Copy previous frequency offset estimates to the respective outputs.
         if (cfo_out != nullptr) {
             cfo_out[i] = d_cfo;
@@ -149,15 +176,24 @@ int fo_lms_cc_impl::general_work(int noutput_items,
             sfo_out[i] = d_sfo;
         }
 
-        // Update the carrier frequency offset estimate.
-        d_cfo -= d_mu_cfo * std::imag(out[i] * std::conj(d_error));
+        if (d_adapt) {
+            // Update the filter coefficients.
+            for (int k = 0; k < l; k++) {
+                // Update tap locally from error.
+                update_tap(d_taps[k], d_y_0[k]);
+            }
 
-        // Update the sampling frequency offset estimate.
-        gr_complex temp_1, temp_2;
-        volk_32fc_x2_conjugate_dot_prod_32fc(&temp_1, &d_y_1[0], &d_taps[0], l);
-        volk_32fc_x2_conjugate_dot_prod_32fc(&temp_2, &d_y_2[0], &d_taps[0], l);
-        auto d = (temp_1 - temp_2) / gr_complex(2.0, 0);
-        d_sfo += d_mu_sfo * std::real(d * std::exp(gr_complex(0, 1) * d_p) * std::conj(d_error));
+            // Update the carrier frequency offset estimate.
+            d_cfo -= d_mu_cfo * std::imag(out[i] * std::conj(d_error));
+
+            // Update the sampling frequency offset estimate.
+            gr_complex temp_1, temp_2;
+            volk_32fc_x2_conjugate_dot_prod_32fc(&temp_1, &d_y_1[0], &d_taps[0], l);
+            volk_32fc_x2_conjugate_dot_prod_32fc(&temp_2, &d_y_2[0], &d_taps[0], l);
+            auto d = (temp_1 - temp_2) / gr_complex(2.0, 0);
+            d_sfo +=
+                d_mu_sfo * std::real(d * std::exp(gr_complex(0, 1) * d_p) * std::conj(d_error));
+        }
     }
 
     // Tell runtime system how many input items we consumed.

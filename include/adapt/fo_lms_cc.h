@@ -16,7 +16,7 @@ namespace gr {
 namespace adapt {
 
 /*!
- * \brief <+description of block+>
+ * \brief Frequency Offsets Least Mean Squares Adaptive filter (complex in/out)
  * \ingroup adapt
  *
  */
@@ -29,14 +29,23 @@ class ADAPT_API fo_lms_cc : virtual public gr::block {
     typedef std::shared_ptr<fo_lms_cc> sptr;
 
     /*!
-     * \brief Return a shared_ptr to a new instance of adapt::fo_lms_cc.
+     * Make an FO-LMS adaptive filter
      *
-     * To avoid accidental use of raw pointers, adapt::fo_lms_cc's
-     * constructor is in a private implementation
-     * class. adapt::fo_lms_cc::make is the public interface for
-     * creating new instances.
+     * \param samp_rate Sampling rate (double)
+     * \param num_taps Number of taps in the filter (int)
+     * \param mu_cir Gain of the channel update loop (float)
+     * \param mu_cfo Gain of the carrier frequency offset update loop (float)
+     * \param mu_sfo Gain of the sampling frequency offset update loop (float)
+     * \param adapt Controls whether filter taps are being updated (bool)
+     * \param reset Reset filter taps (bool).
      */
-    static sptr make(double samp_rate, int num_taps, float mu_cir, float mu_cfo, float mu_sfo);
+    static sptr make(double samp_rate,
+                     int num_taps,
+                     float mu_cir,
+                     float mu_cfo,
+                     float mu_sfo,
+                     bool adapt,
+                     bool reset);
 
     virtual float get_mu_cir() const = 0;
     virtual void set_mu_cir(float mu_cir) = 0;
@@ -44,6 +53,10 @@ class ADAPT_API fo_lms_cc : virtual public gr::block {
     virtual void set_mu_cfo(float mu_cfo) = 0;
     virtual float get_mu_sfo() const = 0;
     virtual void set_mu_sfo(float mu_sfo) = 0;
+    virtual bool get_adapt() const = 0;
+    virtual void set_adapt(bool adapt) = 0;
+    virtual bool get_reset() const = 0;
+    virtual void set_reset(bool reset) = 0;
 };
 
 } // namespace adapt

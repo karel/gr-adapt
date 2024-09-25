@@ -43,3 +43,15 @@ static const char* __doc_gr_adapt_fo_lms_cc_get_mu_sfo = R"doc()doc";
 
 
 static const char* __doc_gr_adapt_fo_lms_cc_set_mu_sfo = R"doc()doc";
+
+
+static const char* __doc_gr_adapt_fo_lms_cc_get_adapt = R"doc()doc";
+
+
+static const char* __doc_gr_adapt_fo_lms_cc_set_adapt = R"doc()doc";
+
+
+static const char* __doc_gr_adapt_fo_lms_cc_get_reset = R"doc()doc";
+
+
+static const char* __doc_gr_adapt_fo_lms_cc_set_reset = R"doc()doc";

@@ -42,7 +42,7 @@ blocks:
     min_len: '10'
     orient: QtCore.Qt.Horizontal
     rangeType: float
-    start: '0'
+    start: -1e3
     step: 1e3
     stop: 1e3
     value: '0'
@@ -63,7 +63,7 @@ blocks:
     min_len: '10'
     orient: QtCore.Qt.Horizontal
     rangeType: float
-    start: '0'
+    start: -.1
     step: '.01'
     stop: '.1'
     value: '0'
@@ -154,7 +154,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '32000'
+    value: '512000'
   states:
     bus_sink: false
     bus_source: false
@@ -210,12 +210,28 @@ blocks:
     coordinate: [1160, 12.0]
     rotation: 0
     state: true
-- name: variable_qtgui_label_3
+- name: variable_qtgui_label_2_0
   id: variable_qtgui_label
   parameters:
     comment: ''
     formatter: None
     gui_hint: 7,0,1,3
+    label: Controls
+    type: string
+    value: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1176, 92.0]
+    rotation: 0
+    state: enabled
+- name: variable_qtgui_label_3
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: 9,0,1,3
     label: Power spectral density
     type: string
     value: ''
@@ -226,9 +242,44 @@ blocks:
     coordinate: [1008, 92.0]
     rotation: 0
     state: true
+- name: variable_qtgui_push_button_reset_folms
+  id: variable_qtgui_push_button
+  parameters:
+    comment: ''
+    gui_hint: 8,1,1,1
+    label: Reset (FO-LMS)
+    pressed: 'True'
+    released: 'False'
+    type: bool
+    value: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 140.0]
+    rotation: 0
+    state: enabled
+- name: variable_qtgui_push_button_reset_lms
+  id: variable_qtgui_push_button
+  parameters:
+    comment: ''
+    gui_hint: 8,0,1,1
+    label: Reset (LMS)
+    pressed: 'True'
+    released: 'False'
+    type: bool
+    value: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 140.0]
+    rotation: 0
+    state: enabled
 - name: adapt_fo_lms_cc_0
   id: adapt_fo_lms_cc
   parameters:
+    adapt: 'True'
     affinity: ''
     alias: ''
     comment: ''
@@ -238,12 +289,13 @@ blocks:
     mu_cir: gui_mu_cir
     mu_sfo: gui_mu_sfo
     num_taps: n_taps
+    reset: variable_qtgui_push_button_reset_folms
     samp_rate: samp_rate
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [800, 832.0]
+    coordinate: [800, 828.0]
     rotation: 0
     state: enabled
 - name: adapt_lms_filter_xx_0
@@ -261,7 +313,7 @@ blocks:
     minoutbuf: '0'
     mu: gui_mu_cir
     num_taps: n_taps
-    reset: 'False'
+    reset: variable_qtgui_push_button_reset_lms
     skip: '0'
     type: cc
   states:
@@ -295,7 +347,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: 1e-3
+    amp: 1e-4
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -322,6 +374,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -468,7 +521,7 @@ blocks:
     maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
-    samples_per_second: samp_rate*4
+    samples_per_second: samp_rate
     type: complex
     vlen: '1'
   states:
@@ -587,7 +640,7 @@ blocks:
     fftsize: '1024'
     freqhalf: 'True'
     grid: 'True'
-    gui_hint: 8,0,10,3
+    gui_hint: 10,0,10,3
     label: Relative Gain
     label1: '''Transmitted (x)'''
     label10: ''''''
@@ -951,4 +1004,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.11.0.0git-412-ge2981b5c
+  grc_version: v3.11.0.0git-821-g5b44e32d
