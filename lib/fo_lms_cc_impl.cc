@@ -11,8 +11,6 @@
 #include <gnuradio/block.h>
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/io_signature.h>
-#include <gnuradio/logger.h>
-#include <string>
 #include <volk/volk.h>
 
 namespace gr {
@@ -52,22 +50,17 @@ fo_lms_cc_impl::fo_lms_cc_impl(double samp_rate,
                     std::vector<int>{
                         sizeof(output_type), sizeof(output_type), sizeof(float), sizeof(float)})),
       fir_filter_ccc(std::vector<gr_complex>(num_taps, gr_complex(0, 0))), d_samp_rate(samp_rate),
-      d_mu_cir(mu_cir), d_mu_cfo(mu_cfo), d_mu_sfo(mu_sfo), d_adapt(adapt), d_reset(false) {
+      d_M(num_taps), d_mu_cir(mu_cir), d_mu_cfo(mu_cfo), d_mu_sfo(mu_sfo), d_adapt(adapt),
+      d_reset(false) {
     const int alignment_multiple = volk_get_alignment() / sizeof(input_type);
     set_alignment(std::max(1, alignment_multiple));
 
-    d_y_0 = new gr_complex[num_taps]{};
-    d_y_1 = new gr_complex[num_taps]{};
-    d_y_2 = new gr_complex[num_taps]{};
+    d_y = new gr_complex[d_M]{};
 
-    set_history(num_taps);
+    set_history(d_M);
 }
 
-fo_lms_cc_impl::~fo_lms_cc_impl() {
-    delete[] d_y_0;
-    delete[] d_y_1;
-    delete[] d_y_2;
-}
+fo_lms_cc_impl::~fo_lms_cc_impl() { delete[] d_y; }
 
 float fo_lms_cc_impl::get_mu_cir() const { return d_mu_cir; }
 
@@ -126,11 +119,10 @@ int fo_lms_cc_impl::general_work(int noutput_items,
         return 0;
     }
 
-    size_t l = d_taps.size();
-    int m = 0;
-    int i = 0;
+    int m = 0, i = 0;
 
     for (; i < noutput_items - INTERPOLATOR_PADDING; i++) {
+        std::rotate(d_y, d_y + 1, d_y + d_M);
 
         // Increment the phase and time counters.
         d_p += d_cfo;
@@ -149,17 +141,12 @@ int fo_lms_cc_impl::general_work(int noutput_items,
         }
 
         // Perform arbitrary sampling rate conversion.
-        for (int k = 0; k < l; k++) {
-            // Interpolator gives [0,1] between 4th and 5th sample relying on 8 taps.
-            d_y_0[k] = d_interpolator.interpolate(&input[i + k + m - 3], d_t);
-
-            d_y_1[k] = d_interpolator.interpolate(&input[i + k + m - 3 + 1], d_t);
-            d_y_2[k] = d_interpolator.interpolate(&input[i + k + m - 3 - 1], d_t);
-        }
+        d_y[d_M - 1] = d_interpolator.interpolate(&input[i + d_M + m - 3], d_t);
 
         // Calculate the output signal y(n) of the adaptive filter.
-        volk_32fc_x2_conjugate_dot_prod_32fc(&out[i], &d_y_0[0], &d_taps[0], l);
+        volk_32fc_x2_conjugate_dot_prod_32fc(&out[i], &d_y[0], &d_taps[0], d_M);
         out[i] = out[i] * std::exp(gr_complex(0, 1) * d_p);
+        d_out_previous = out[i - 1];
 
         // Calculate the error signal e(n) by using: e(n) = d(n) - y(n).
         d_error = error(desired[i], out[i]);
@@ -178,21 +165,16 @@ int fo_lms_cc_impl::general_work(int noutput_items,
 
         if (d_adapt) {
             // Update the filter coefficients.
-            for (int k = 0; k < l; k++) {
+            for (int k = 0; k < d_M; k++) {
                 // Update tap locally from error.
-                update_tap(d_taps[k], d_y_0[k]);
+                update_tap(d_taps[k], d_y[k]);
             }
 
             // Update the carrier frequency offset estimate.
             d_cfo -= d_mu_cfo * std::imag(out[i] * std::conj(d_error));
 
             // Update the sampling frequency offset estimate.
-            gr_complex temp_1, temp_2;
-            volk_32fc_x2_conjugate_dot_prod_32fc(&temp_1, &d_y_1[0], &d_taps[0], l);
-            volk_32fc_x2_conjugate_dot_prod_32fc(&temp_2, &d_y_2[0], &d_taps[0], l);
-            auto d = (temp_1 - temp_2) / gr_complex(2.0, 0);
-            d_sfo +=
-                d_mu_sfo * std::real(d * std::exp(gr_complex(0, 1) * d_p) * std::conj(d_error));
+            d_sfo += d_mu_sfo * std::real(std::conj(out[i] - d_out_previous) * d_error);
         }
     }
 

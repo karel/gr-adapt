@@ -22,11 +22,12 @@ class fo_lms_cc_impl : public fo_lms_cc, filter::kernel::fir_filter_ccc {
     bool d_updated = false;
     const gr::filter::mmse_fir_interpolator_cc d_interpolator;
     double d_samp_rate;
-    gr_complex d_error;
-    gr_complex *d_y_0, *d_y_1, *d_y_2;
+    gr_complex d_error, d_out_previous;
+    gr_complex* d_y;
     float d_mu_cir, d_mu_cfo, d_mu_sfo;
     float d_cfo = 0.0, d_sfo = 0.0;
     float d_p = 0.0, d_t = 0.0;
+    int d_M;
     bool d_adapt, d_reset;
 
     protected:
