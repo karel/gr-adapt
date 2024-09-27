@@ -146,7 +146,8 @@ int fo_lms_cc_impl::general_work(int noutput_items,
         // Calculate the output signal y(n) of the adaptive filter.
         volk_32fc_x2_conjugate_dot_prod_32fc(&out[i], &d_y[0], &d_taps[0], d_M);
         out[i] = out[i] * std::exp(gr_complex(0, 1) * d_p);
-        d_out_previous = out[i - 1];
+        if (i > 0)
+            d_out_previous = out[i - 1];
 
         // Calculate the error signal e(n) by using: e(n) = d(n) - y(n).
         d_error = error(desired[i], out[i]);
