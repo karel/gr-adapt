@@ -23,6 +23,7 @@ list(APPEND adapt_sources
   iqrd_rls_filter_ff_impl.cc
   iqrd_rls_filter_cc_impl.cc
   fo_lms_cc_impl.cc
+  s_fo_lms_cc_impl.cc
 )
 
 set(adapt_sources "${adapt_sources}" PARENT_SCOPE)

@@ -22,5 +22,6 @@ install(FILES
     iqrd_rls_filter_ff.h
     iqrd_rls_filter_cc.h
     fo_lms_cc.h
+    s_fo_lms_cc.h
     DESTINATION include/adapt
 )

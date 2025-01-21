@@ -15,11 +15,14 @@ The following standard filters are provided:
 * Recursive least squares (__RLS__)
 * Recursive least squares employing QR decomposition (__QRD-RLS__ and __IQRD-RLS__)
 
-The LMS and NLMS filters take an optional third input, which, if provided, will be used to update the filter taps. This allows the LMS and NLMS filters to be used in the filtered-x configuration (i.e. __FxLMS__ and __FxNLMS__). Furthermore, an adaptive filter is provided for estimating and tracking a channel under carrier and sampling frequency offsets:
+The LMS and NLMS filters take an optional third input, which, if provided, will be used to update the filter taps. This allows the LMS and NLMS filters to be used in the filtered-x configuration (i.e. __FxLMS__ and __FxNLMS__). Furthermore, adaptive filters are provided for estimating and tracking a channel under carrier and sampling frequency offsets as well as nonlinear distortions:
 
-* Frequency offsets least mean squares (__FO-LMS__)[^1]
+* Frequency offsets-compensated least mean squares (__FO-LMS__)[^1]
+* Spline-interpolated and frequency offsets-compensated least mean squares (__S-FO-LMS__)[^2]
 
 [^1]: K. Pärlin, T. Riihonen, V. L. Nir, and M. Adrat, “Estimating and Tracking Wireless Channels under Carrier and Sampling Frequency Offsets,” IEEE Transactions on Signal Processing, vol. 71, pp. 1053&ndash;1066, Mar. 2023.
+
+[^2]: K. Pärlin, M. Turunen, A. Byman, T. Meriläinen, V. L. Nir, M. Adrat, and T. Riihonen “High-Power Cooperative Jamming with Nonlinear Known-Interference Cancellation,” IEEE Transactions on Aerospace and Electronic Systems, 2025.
 
 ### Tests
 
@@ -34,6 +37,7 @@ In the [examples](./examples) directory, examples of using adaptive filter block
 - System identification
 - Time delay estimation
 - Channel and frequency offsets estimation
+- Channel, nonlinear distortions, and frequency offsets estimation
 
 ## Installation
 ### Dependencies
