@@ -12,14 +12,15 @@
 #ifdef ARMADILLO_FOUND
 #include <armadillo>
 #endif
-#include <adapt/iqrd_rls_filter_ff.h>
+#include <gnuradio/adapt/iqrd_rls_filter_ff.h>
 #include <gnuradio/filter/fir_filter.h>
 
 namespace gr {
 namespace adapt {
 
-class iqrd_rls_filter_ff_impl : public iqrd_rls_filter_ff, filter::kernel::fir_filter_fff {
-    private:
+class iqrd_rls_filter_ff_impl : public iqrd_rls_filter_ff, filter::kernel::fir_filter_fff
+{
+private:
     void init_internals();
 
 #ifdef ARMADILLO_FOUND
@@ -36,10 +37,10 @@ class iqrd_rls_filter_ff_impl : public iqrd_rls_filter_ff, filter::kernel::fir_f
     unsigned d_skip, d_i;
     bool d_adapt, d_reset;
 
-    protected:
+protected:
     float error(const float& desired, const float& out);
 
-    public:
+public:
     iqrd_rls_filter_ff_impl(int num_taps,
                             float delta,
                             float lambda,

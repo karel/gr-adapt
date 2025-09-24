@@ -25,9 +25,10 @@ nlms_filter_ff::sptr nlms_filter_ff::make(bool first_input,
                                           unsigned decimation,
                                           bool adapt,
                                           bool bypass,
-                                          bool reset) {
-    return gnuradio::get_initial_sptr(
-        new nlms_filter_ff_impl(first_input, num_taps, mu, skip, decimation, adapt, bypass, reset));
+                                          bool reset)
+{
+    return gnuradio::get_initial_sptr(new nlms_filter_ff_impl(
+        first_input, num_taps, mu, skip, decimation, adapt, bypass, reset));
 }
 
 /*
@@ -44,12 +45,22 @@ nlms_filter_ff_impl::nlms_filter_ff_impl(bool first_input,
     : gr::sync_decimator(
           "nlms_filter_ff",
           gr::io_signature::make(2, 3, sizeof(float)),
-          gr::io_signature::makev(
-              1, 3, std::vector<int>{sizeof(float), sizeof(float), num_taps * int(sizeof(float))}),
+          gr::io_signature::makev(1,
+                                  3,
+                                  std::vector<int>{ sizeof(float),
+                                                    sizeof(float),
+                                                    num_taps * int(sizeof(float)) }),
           decimation),
-      fir_filter_fff(std::vector<float>(num_taps, 0.0)), d_first_input(first_input),
-      d_updated(false), d_epsilon(std::numeric_limits<float>::epsilon()), d_skip(skip), d_i(0),
-      d_adapt(adapt), d_bypass(bypass), d_reset(false) {
+      fir_filter_fff(std::vector<float>(num_taps, 0.0)),
+      d_first_input(first_input),
+      d_updated(false),
+      d_epsilon(std::numeric_limits<float>::epsilon()),
+      d_skip(skip),
+      d_i(0),
+      d_adapt(adapt),
+      d_bypass(bypass),
+      d_reset(false)
+{
     set_mu(mu);
 
     const int alignment_multiple = volk_get_alignment() / sizeof(float);
@@ -65,7 +76,8 @@ nlms_filter_ff_impl::nlms_filter_ff_impl(bool first_input,
 #endif // ARMADILLO_FOUND
 }
 
-void nlms_filter_ff_impl::set_taps(const std::vector<float>& new_taps) {
+void nlms_filter_ff_impl::set_taps(const std::vector<float>& new_taps)
+{
 #ifdef ARMADILLO_FOUND
     d_new_taps = arma::fvec(new_taps);
 #else
@@ -74,7 +86,8 @@ void nlms_filter_ff_impl::set_taps(const std::vector<float>& new_taps) {
     d_updated = true;
 }
 
-const std::vector<float>& nlms_filter_ff_impl::get_taps() {
+const std::vector<float>& nlms_filter_ff_impl::get_taps()
+{
 #ifdef ARMADILLO_FOUND
     fir_filter_fff::d_taps = arma::conv_to<std::vector<float>>::from(d_taps);
 #endif // ARMADILLO_FOUND
@@ -83,9 +96,11 @@ const std::vector<float>& nlms_filter_ff_impl::get_taps() {
 
 float nlms_filter_ff_impl::get_mu() const { return d_mu; }
 
-void nlms_filter_ff_impl::set_mu(float mu) {
+void nlms_filter_ff_impl::set_mu(float mu)
+{
     if (mu <= 0.0f || mu >= 2.0f) {
-        throw std::out_of_range("nlms_filter_ff_impl::set_mu: Step size must be in range (0, 2)");
+        throw std::out_of_range(
+            "nlms_filter_ff_impl::set_mu: Step size must be in range (0, 2)");
     } else {
         d_mu = mu;
     }
@@ -105,22 +120,28 @@ void nlms_filter_ff_impl::set_bypass(bool bypass) { d_bypass = bypass; }
 
 bool nlms_filter_ff_impl::get_reset() const { return d_reset; }
 
-void nlms_filter_ff_impl::set_reset(bool reset) {
+void nlms_filter_ff_impl::set_reset(bool reset)
+{
     d_reset = reset;
     if (d_reset) {
         set_taps(std::vector<float>(d_taps.size(), 0.0));
     }
 }
 
-float nlms_filter_ff_impl::error(const float& desired, const float& out) { return desired - out; }
+float nlms_filter_ff_impl::error(const float& desired, const float& out)
+{
+    return desired - out;
+}
 
-void nlms_filter_ff_impl::update_tap(float& tap, const float& in) {
+void nlms_filter_ff_impl::update_tap(float& tap, const float& in)
+{
     tap += (d_mu / d_power) * in * d_error;
 }
 
 int nlms_filter_ff_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
-                              gr_vector_void_star& output_items) {
+                              gr_vector_void_star& output_items)
+{
     const auto* desired = (const float*)input_items[0] + d_taps.size() - 1;
     const auto* input = (const float*)input_items[1];
     const float* filtered_input;
@@ -165,7 +186,8 @@ int nlms_filter_ff_impl::work(int noutput_items,
     size_t l = d_taps.size();
 #ifdef ARMADILLO_FOUND
     float scale;
-    arma::fvec input_arma((float*)input, noutput_items * decimation() + l - 1, false, true);
+    arma::fvec input_arma(
+        (float*)input, noutput_items * decimation() + l - 1, false, true);
     arma::fvec filtered_input_arma(
         (float*)filtered_input, noutput_items * decimation() + l - 1, false, true);
 #endif // ARMADILLO_FOUND
@@ -223,10 +245,13 @@ int nlms_filter_ff_impl::work(int noutput_items,
 
         if (taps_out != nullptr) {
 #ifdef ARMADILLO_FOUND
-            std::memcpy(
-                &taps_out[i * d_taps.size()], d_taps.memptr(), sizeof(float) * d_taps.size());
+            std::memcpy(&taps_out[i * d_taps.size()],
+                        d_taps.memptr(),
+                        sizeof(float) * d_taps.size());
 #else
-            std::memcpy(&taps_out[i * d_taps.size()], &(d_taps[0]), sizeof(float) * d_taps.size());
+            std::memcpy(&taps_out[i * d_taps.size()],
+                        &(d_taps[0]),
+                        sizeof(float) * d_taps.size());
 #endif // ARMADILLO_FOUND
         }
 

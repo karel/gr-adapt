@@ -12,14 +12,15 @@
 #ifdef ARMADILLO_FOUND
 #include <armadillo>
 #endif
-#include <adapt/nlms_filter_cc.h>
+#include <gnuradio/adapt/nlms_filter_cc.h>
 #include <gnuradio/filter/fir_filter.h>
 
 namespace gr {
 namespace adapt {
 
-class nlms_filter_cc_impl : public nlms_filter_cc, filter::kernel::fir_filter_ccc {
-    private:
+class nlms_filter_cc_impl : public nlms_filter_cc, filter::kernel::fir_filter_ccc
+{
+private:
 #ifdef ARMADILLO_FOUND
     arma::cx_fvec d_taps;
     arma::cx_fvec d_new_taps;
@@ -33,11 +34,11 @@ class nlms_filter_cc_impl : public nlms_filter_cc, filter::kernel::fir_filter_cc
     unsigned d_skip, d_i;
     bool d_adapt, d_bypass, d_reset;
 
-    protected:
+protected:
     gr_complex error(const gr_complex& desired, const gr_complex& out) override;
     void update_tap(gr_complex& tap, const gr_complex& in) override;
 
-    public:
+public:
     nlms_filter_cc_impl(bool first_input,
                         int num_taps,
                         float mu,

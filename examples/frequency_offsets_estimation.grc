@@ -1,29 +1,25 @@
 options:
   parameters:
+    alias: ''
     author: karel
     catch_exceptions: 'True'
-    category: '[GRC Hier Blocks]'
-    cmake_opt: ''
     comment: ''
     copyright: ''
     description: This example demonstrates the use of FO-LMS adaptive filter.
-    gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
+    generator_class_name: PythonQtGuiGenerator
+    generator_module: gnuradio.grc.workflows.python_qt_gui
     hier_block_src_path: '.:'
     id: frequency_offsets_estimation
     max_nouts: '0'
     output_language: python
-    placement: (0,0)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: prompt
-    sizing_mode: fixed
     thread_safe_setters: ''
     title: Frequency Offsets Estimaton
-    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -276,8 +272,8 @@ blocks:
     coordinate: [408, 140.0]
     rotation: 0
     state: enabled
-- name: adapt_fo_lms_cc_0
-  id: adapt_fo_lms_cc
+- name: adapt_fo_lms_filter_cc_0
+  id: adapt_fo_lms_filter_cc
   parameters:
     adapt: 'True'
     affinity: ''
@@ -295,7 +291,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [800, 828.0]
+    coordinate: [808, 832.0]
     rotation: 0
     state: enabled
 - name: adapt_lms_filter_xx_0
@@ -972,10 +968,10 @@ blocks:
     state: enabled
 
 connections:
-- [adapt_fo_lms_cc_0, '0', blocks_null_sink_1, '0']
-- [adapt_fo_lms_cc_0, '1', virtual_sink_0_1, '0']
-- [adapt_fo_lms_cc_0, '2', blocks_multiply_const_vxx_0, '0']
-- [adapt_fo_lms_cc_0, '3', blocks_multiply_const_vxx_0_0, '0']
+- [adapt_fo_lms_filter_cc_0, '0', blocks_null_sink_1, '0']
+- [adapt_fo_lms_filter_cc_0, '1', virtual_sink_0_1, '0']
+- [adapt_fo_lms_filter_cc_0, '2', blocks_multiply_const_vxx_0, '0']
+- [adapt_fo_lms_filter_cc_0, '3', blocks_multiply_const_vxx_0_0, '0']
 - [adapt_lms_filter_xx_0, '0', blocks_null_sink_0, '0']
 - [adapt_lms_filter_xx_0, '1', virtual_sink_0_1_0, '0']
 - [analog_noise_source_x_0, '0', low_pass_filter_0, '0']
@@ -991,10 +987,10 @@ connections:
 - [low_pass_filter_0, '0', blocks_throttle2_0, '0']
 - [mmse_resampler_xx_0, '0', blocks_multiply_xx_0, '0']
 - [virtual_source_0, '0', qtgui_freq_sink_x_0, '0']
-- [virtual_source_0_0, '0', adapt_fo_lms_cc_0, '1']
+- [virtual_source_0_0, '0', adapt_fo_lms_filter_cc_0, '1']
 - [virtual_source_0_0_0, '0', blocks_delay_0_0, '0']
 - [virtual_source_0_1, '0', adapt_lms_filter_xx_0, '1']
-- [virtual_source_0_1_0, '0', adapt_fo_lms_cc_0, '0']
+- [virtual_source_0_1_0, '0', adapt_fo_lms_filter_cc_0, '0']
 - [virtual_source_0_1_0_0, '0', adapt_lms_filter_xx_0, '0']
 - [virtual_source_0_1_0_0_0, '0', qtgui_freq_sink_x_0, '1']
 - [virtual_source_0_1_0_0_0_0, '0', qtgui_freq_sink_x_0, '2']
@@ -1004,4 +1000,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.11.0.0git-821-g5b44e32d
+  grc_version: v3.11.0.0git-991-g721e477c

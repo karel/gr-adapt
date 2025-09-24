@@ -22,7 +22,7 @@ The LMS and NLMS filters take an optional third input, which, if provided, will 
 
 [^1]: K. Pärlin, T. Riihonen, V. L. Nir, and M. Adrat, “Estimating and Tracking Wireless Channels under Carrier and Sampling Frequency Offsets,” IEEE Transactions on Signal Processing, vol. 71, pp. 1053&ndash;1066, Mar. 2023.
 
-[^2]: K. Pärlin, M. Turunen, A. Byman, T. Meriläinen, V. L. Nir, M. Adrat, and T. Riihonen “High-Power Cooperative Jamming with Nonlinear Known-Interference Cancellation,” IEEE Transactions on Aerospace and Electronic Systems, 2025.
+[^2]: K. Pärlin, M. Turunen, A. Byman, T. Meriläinen, V. L. Nir, M. Adrat, and T. Riihonen “High-Power Cooperative Jamming with Nonlinear Known-Interference Cancellation,” IEEE Transactions on Aerospace and Electronic Systems, vol. 61, pp. 7193&ndash;7204, Jan. 2025.
 
 ### Tests
 

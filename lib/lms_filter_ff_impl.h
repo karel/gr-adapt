@@ -12,14 +12,15 @@
 #ifdef ARMADILLO_FOUND
 #include <armadillo>
 #endif
-#include <adapt/lms_filter_ff.h>
+#include <gnuradio/adapt/lms_filter_ff.h>
 #include <gnuradio/filter/fir_filter.h>
 
 namespace gr {
 namespace adapt {
 
-class lms_filter_ff_impl : public lms_filter_ff, filter::kernel::fir_filter_fff {
-    private:
+class lms_filter_ff_impl : public lms_filter_ff, filter::kernel::fir_filter_fff
+{
+private:
 #ifdef ARMADILLO_FOUND
     arma::fvec d_taps;
     arma::fvec d_new_taps;
@@ -33,11 +34,11 @@ class lms_filter_ff_impl : public lms_filter_ff, filter::kernel::fir_filter_fff 
     unsigned d_skip, d_i;
     bool d_adapt, d_bypass, d_reset;
 
-    protected:
+protected:
     float error(const float& desired, const float& out);
     void update_tap(float& tap, const float& in);
 
-    public:
+public:
     lms_filter_ff_impl(bool first_input,
                        int num_taps,
                        float mu,

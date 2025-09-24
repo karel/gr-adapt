@@ -73,7 +73,7 @@ asserts:
 - ${ decimation > 0 }
 
 templates:
-    imports: import adapt
+    imports: from gnuradio import adapt
     make: adapt.qrd_rls_filter_${type}(${num_taps}, ${delta}, ${_lambda}, ${skip},
         ${decimation}, ${adapt}, ${reset})
     callbacks:

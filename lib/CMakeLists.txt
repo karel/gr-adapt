@@ -9,57 +9,58 @@
 ########################################################################
 # Setup library
 ########################################################################
-include(GrPlatform) #define LIB_SUFFIX
+include(GNUInstallDirs)
 
 list(APPEND adapt_sources
-  lms_filter_ff_impl.cc
-  lms_filter_cc_impl.cc
-	nlms_filter_ff_impl.cc
-  nlms_filter_cc_impl.cc
-  rls_filter_ff_impl.cc
-  rls_filter_cc_impl.cc
-  qrd_rls_filter_ff_impl.cc
-  qrd_rls_filter_cc_impl.cc
-  iqrd_rls_filter_ff_impl.cc
-  iqrd_rls_filter_cc_impl.cc
-  fo_lms_cc_impl.cc
-  s_fo_lms_cc_impl.cc
-)
+    lms_filter_ff_impl.cc
+    lms_filter_cc_impl.cc
+    nlms_filter_ff_impl.cc
+    nlms_filter_cc_impl.cc
+    rls_filter_ff_impl.cc
+    rls_filter_cc_impl.cc
+    qrd_rls_filter_ff_impl.cc
+    qrd_rls_filter_cc_impl.cc
+    iqrd_rls_filter_ff_impl.cc
+    iqrd_rls_filter_cc_impl.cc
+    fo_lms_filter_cc_impl.cc
+    s_fo_lms_filter_cc_impl.cc)
 
-set(adapt_sources "${adapt_sources}" PARENT_SCOPE)
+set(adapt_sources
+    "${adapt_sources}"
+    PARENT_SCOPE)
 if(NOT adapt_sources)
-    MESSAGE(STATUS "No C++ sources... skipping lib/")
+    message(STATUS "No C++ sources... skipping lib/")
     return()
 endif(NOT adapt_sources)
 
 add_library(gnuradio-adapt SHARED ${adapt_sources})
-target_link_libraries(gnuradio-adapt gnuradio::gnuradio-runtime
-  gnuradio::gnuradio-filter
-  gnuradio::gnuradio-blocks
-  gnuradio::gnuradio-fft
-  ${VOLK_LIBRARIES}
-  ${Boost_LIBRARIES}
-  ${GNURADIO_ALL_LIBRARIES})
+target_link_libraries(gnuradio-adapt
+    gnuradio::gnuradio-runtime
+    gnuradio::gnuradio-filter
+    gnuradio::gnuradio-blocks
+    gnuradio::gnuradio-fft
+    ${VOLK_LIBRARIES}
+    ${Boost_LIBRARIES}
+)
 if(LAPACK_FOUND AND ARMADILLO_FOUND)
 	target_link_libraries(gnuradio-adapt ${LAPACK_LIBRARIES} ${ARMADILLO_LIBRARIES} )
 endif(LAPACK_FOUND AND ARMADILLO_FOUND)
-target_include_directories(gnuradio-adapt
+target_include_directories(
+    gnuradio-adapt
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-    PUBLIC $<INSTALL_INTERFACE:include>
-  )
+    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 set_target_properties(gnuradio-adapt PROPERTIES DEFINE_SYMBOL "gnuradio_adapt_EXPORTS")
 
 if(APPLE)
-    set_target_properties(gnuradio-adapt PROPERTIES
-        INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
-    )
+    set_target_properties(gnuradio-adapt PROPERTIES INSTALL_NAME_DIR
+                                                    "${CMAKE_INSTALL_PREFIX}/lib")
 endif(APPLE)
 
 ########################################################################
 # Install built library files
 ########################################################################
 include(GrMiscUtils)
-GR_LIBRARY_FOO(gnuradio-adapt)
+gr_library_foo(gnuradio-adapt)
 
 ########################################################################
 # Print summary
@@ -75,18 +76,15 @@ include(GrTest)
 # If your unit tests require special include paths, add them here
 #include_directories()
 # List all files that contain Boost.UTF unit tests here
-list(APPEND test_adapt_sources
-)
+list(APPEND test_adapt_sources)
 # Anything we need to link to for the unit tests go here
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-adapt)
 
 if(NOT test_adapt_sources)
-    MESSAGE(STATUS "No C++ unit tests... skipping")
+    message(STATUS "No C++ unit tests... skipping")
     return()
 endif(NOT test_adapt_sources)
 
 foreach(qa_file ${test_adapt_sources})
-    GR_ADD_CPP_TEST("adapt_${qa_file}"
-        ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
-    )
+    gr_add_cpp_test("adapt_${qa_file}" ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file})
 endforeach(qa_file)

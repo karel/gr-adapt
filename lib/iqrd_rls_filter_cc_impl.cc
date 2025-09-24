@@ -24,9 +24,10 @@ iqrd_rls_filter_cc::sptr iqrd_rls_filter_cc::make(int num_taps,
                                                   unsigned skip,
                                                   unsigned decimation,
                                                   bool adapt,
-                                                  bool reset) {
-    return gnuradio::get_initial_sptr(
-        new iqrd_rls_filter_cc_impl(num_taps, delta, lambda, skip, decimation, adapt, reset));
+                                                  bool reset)
+{
+    return gnuradio::get_initial_sptr(new iqrd_rls_filter_cc_impl(
+        num_taps, delta, lambda, skip, decimation, adapt, reset));
 }
 
 /*
@@ -44,12 +45,17 @@ iqrd_rls_filter_cc_impl::iqrd_rls_filter_cc_impl(int num_taps,
           gr::io_signature::make(2, 2, sizeof(gr_complex)),
           gr::io_signature::makev(1,
                                   3,
-                                  std::vector<int>{sizeof(gr_complex),
-                                                   sizeof(gr_complex),
-                                                   num_taps * int(sizeof(gr_complex))}),
+                                  std::vector<int>{ sizeof(gr_complex),
+                                                    sizeof(gr_complex),
+                                                    num_taps * int(sizeof(gr_complex)) }),
           decimation),
       fir_filter_ccc(std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
-      d_updated(false), d_skip(skip), d_i(0), d_adapt(adapt), d_reset(false) {
+      d_updated(false),
+      d_skip(skip),
+      d_i(0),
+      d_adapt(adapt),
+      d_reset(false)
+{
     set_delta(delta);
     set_lambda(lambda);
 
@@ -67,7 +73,8 @@ iqrd_rls_filter_cc_impl::iqrd_rls_filter_cc_impl(int num_taps,
     init_internals();
 }
 
-void iqrd_rls_filter_cc_impl::init_internals() {
+void iqrd_rls_filter_cc_impl::init_internals()
+{
     // Soft-start.
 #ifdef ARMADILLO_FOUND
     arma::cx_fmat J = d_delta * arma::eye<arma::cx_fmat>(d_taps.size(), d_taps.size());
@@ -83,7 +90,8 @@ void iqrd_rls_filter_cc_impl::init_internals() {
 #endif // ARMADILLO_FOUND
 }
 
-void iqrd_rls_filter_cc_impl::set_taps(const std::vector<gr_complex>& new_taps) {
+void iqrd_rls_filter_cc_impl::set_taps(const std::vector<gr_complex>& new_taps)
+{
 #ifdef ARMADILLO_FOUND
     d_new_taps = arma::cx_fvec(new_taps);
 #else
@@ -92,7 +100,8 @@ void iqrd_rls_filter_cc_impl::set_taps(const std::vector<gr_complex>& new_taps) 
     d_updated = true;
 }
 
-const std::vector<gr_complex>& iqrd_rls_filter_cc_impl::get_taps() {
+const std::vector<gr_complex>& iqrd_rls_filter_cc_impl::get_taps()
+{
 #ifdef ARMADILLO_FOUND
     fir_filter_ccc::d_taps = arma::conv_to<std::vector<gr_complex>>::from(d_taps);
 #endif // ARMADILLO_FOUND
@@ -101,10 +110,11 @@ const std::vector<gr_complex>& iqrd_rls_filter_cc_impl::get_taps() {
 
 float iqrd_rls_filter_cc_impl::get_delta() const { return d_delta; }
 
-void iqrd_rls_filter_cc_impl::set_delta(float delta) {
+void iqrd_rls_filter_cc_impl::set_delta(float delta)
+{
     if (delta <= 0.0f || delta > 300.0f) {
-        throw std::out_of_range(
-            "iqrd_rls_filter_cc_impl::set_delta: Regularization factor must be in range (0, 300]");
+        throw std::out_of_range("iqrd_rls_filter_cc_impl::set_delta: Regularization "
+                                "factor must be in range (0, 300]");
     } else {
         d_delta = delta;
     }
@@ -112,10 +122,11 @@ void iqrd_rls_filter_cc_impl::set_delta(float delta) {
 
 float iqrd_rls_filter_cc_impl::get_lambda() const { return d_lambda; }
 
-void iqrd_rls_filter_cc_impl::set_lambda(float lambda) {
+void iqrd_rls_filter_cc_impl::set_lambda(float lambda)
+{
     if (lambda <= 0.0f || lambda > 1.0f) {
-        throw std::out_of_range(
-            "iqrd_rls_filter_cc_impl::set_lambda: Forgetting factor must be in range (0, 1]");
+        throw std::out_of_range("iqrd_rls_filter_cc_impl::set_lambda: Forgetting factor "
+                                "must be in range (0, 1]");
     } else {
         d_lambda = lambda;
     }
@@ -131,20 +142,24 @@ void iqrd_rls_filter_cc_impl::set_adapt(bool adapt) { d_adapt = adapt; }
 
 bool iqrd_rls_filter_cc_impl::get_reset() const { return d_reset; }
 
-void iqrd_rls_filter_cc_impl::set_reset(bool reset) {
+void iqrd_rls_filter_cc_impl::set_reset(bool reset)
+{
     d_reset = reset;
     if (d_reset) {
         set_taps(std::vector<gr_complex>(d_taps.size(), gr_complex(0, 0)));
     }
 }
 
-gr_complex iqrd_rls_filter_cc_impl::error(const gr_complex& desired, const gr_complex& out) {
+gr_complex iqrd_rls_filter_cc_impl::error(const gr_complex& desired,
+                                          const gr_complex& out)
+{
     return desired - out;
 }
 
 int iqrd_rls_filter_cc_impl::work(int noutput_items,
                                   gr_vector_const_void_star& input_items,
-                                  gr_vector_void_star& output_items) {
+                                  gr_vector_void_star& output_items)
+{
     const auto* desired = (const gr_complex*)input_items[0] + d_taps.size() - 1;
     const auto* input = (const gr_complex*)input_items[1];
     auto* out = (gr_complex*)output_items[0];
@@ -174,7 +189,8 @@ int iqrd_rls_filter_cc_impl::work(int noutput_items,
     gr_complex gamma;
 #ifdef ARMADILLO_FOUND
     arma::cx_fvec u;
-    arma::cx_fvec input_arma((gr_complex*)input, noutput_items * decimation() + N - 1, false, true);
+    arma::cx_fvec input_arma(
+        (gr_complex*)input, noutput_items * decimation() + N - 1, false, true);
 #endif // ARMADILLO_FOUND
     for (int i = 0; i < noutput_items; i++) {
         if (d_adapt && (!d_skip || d_i >= (d_skip + 1))) {
@@ -228,7 +244,8 @@ int iqrd_rls_filter_cc_impl::work(int noutput_items,
 
 // Calculate the output signal y(n) of the adaptive filter.
 #ifdef ARMADILLO_FOUND
-        out[i] = std::conj(arma::dot(input_arma.subvec(k, arma::size(d_taps)).t(), d_taps));
+        out[i] =
+            std::conj(arma::dot(input_arma.subvec(k, arma::size(d_taps)).t(), d_taps));
 #else
 #ifdef ALIGNED_FIR_FILTER
         out[i] = std::conj(filter(&input[k]));
@@ -262,11 +279,13 @@ int iqrd_rls_filter_cc_impl::work(int noutput_items,
 
         if (taps_out != nullptr) {
 #ifdef ARMADILLO_FOUND
-            std::memcpy(
-                &taps_out[i * d_taps.size()], d_taps.memptr(), sizeof(gr_complex) * d_taps.size());
+            std::memcpy(&taps_out[i * d_taps.size()],
+                        d_taps.memptr(),
+                        sizeof(gr_complex) * d_taps.size());
 #else
-            std::memcpy(
-                &taps_out[i * d_taps.size()], &(d_taps[0]), sizeof(gr_complex) * d_taps.size());
+            std::memcpy(&taps_out[i * d_taps.size()],
+                        &(d_taps[0]),
+                        sizeof(gr_complex) * d_taps.size());
 #endif // ARMADILLO_FOUND
         }
 

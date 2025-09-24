@@ -24,9 +24,10 @@ qrd_rls_filter_ff::sptr qrd_rls_filter_ff::make(int num_taps,
                                                 unsigned skip,
                                                 unsigned decimation,
                                                 bool adapt,
-                                                bool reset) {
-    return gnuradio::get_initial_sptr(
-        new qrd_rls_filter_ff_impl(num_taps, delta, lambda, skip, decimation, adapt, reset));
+                                                bool reset)
+{
+    return gnuradio::get_initial_sptr(new qrd_rls_filter_ff_impl(
+        num_taps, delta, lambda, skip, decimation, adapt, reset));
 }
 
 /*
@@ -42,11 +43,19 @@ qrd_rls_filter_ff_impl::qrd_rls_filter_ff_impl(int num_taps,
     : gr::sync_decimator(
           "qrd_rls_filter_ff",
           gr::io_signature::make(2, 2, sizeof(float)),
-          gr::io_signature::makev(
-              1, 3, std::vector<int>{sizeof(float), sizeof(float), num_taps * int(sizeof(float))}),
+          gr::io_signature::makev(1,
+                                  3,
+                                  std::vector<int>{ sizeof(float),
+                                                    sizeof(float),
+                                                    num_taps * int(sizeof(float)) }),
           decimation),
-      fir_filter_fff(std::vector<float>(num_taps, 0.0)), d_updated(false), d_skip(skip),
-      d_i(0), d_adapt(adapt), d_reset(false) {
+      fir_filter_fff(std::vector<float>(num_taps, 0.0)),
+      d_updated(false),
+      d_skip(skip),
+      d_i(0),
+      d_adapt(adapt),
+      d_reset(false)
+{
     set_delta(delta);
     set_lambda(lambda);
 
@@ -64,14 +73,16 @@ qrd_rls_filter_ff_impl::qrd_rls_filter_ff_impl(int num_taps,
     init_internals();
 }
 
-void qrd_rls_filter_ff_impl::init_internals() {
+void qrd_rls_filter_ff_impl::init_internals()
+{
     // Soft-start.
 #ifdef ARMADILLO_FOUND
     arma::fmat J = d_delta * arma::eye<arma::fmat>(d_taps.size(), d_taps.size());
     d_U = arma::fliplr(J);
     d_dq2.zeros(d_taps.size());
 #else
-    d_U = std::vector<std::vector<float>>(d_taps.size(), std::vector<float>(d_taps.size(), 0.0));
+    d_U = std::vector<std::vector<float>>(d_taps.size(),
+                                          std::vector<float>(d_taps.size(), 0.0));
     d_dq2 = std::vector<float>(d_taps.size(), 0.0);
     for (int i = 0; i < d_taps.size(); i++) {
         d_U[d_taps.size() - 1 - i][i] = d_delta;
@@ -79,7 +90,8 @@ void qrd_rls_filter_ff_impl::init_internals() {
 #endif // ARMADILLO_FOUND
 }
 
-void qrd_rls_filter_ff_impl::set_taps(const std::vector<float>& new_taps) {
+void qrd_rls_filter_ff_impl::set_taps(const std::vector<float>& new_taps)
+{
 #ifdef ARMADILLO_FOUND
     d_new_taps = arma::fvec(new_taps);
 #else
@@ -88,7 +100,8 @@ void qrd_rls_filter_ff_impl::set_taps(const std::vector<float>& new_taps) {
     d_updated = true;
 }
 
-const std::vector<float>& qrd_rls_filter_ff_impl::get_taps() {
+const std::vector<float>& qrd_rls_filter_ff_impl::get_taps()
+{
 #ifdef ARMADILLO_FOUND
     fir_filter_fff::d_taps = arma::conv_to<std::vector<float>>::from(d_taps);
 #endif // ARMADILLO_FOUND
@@ -97,10 +110,11 @@ const std::vector<float>& qrd_rls_filter_ff_impl::get_taps() {
 
 float qrd_rls_filter_ff_impl::get_delta() const { return d_delta; }
 
-void qrd_rls_filter_ff_impl::set_delta(float delta) {
+void qrd_rls_filter_ff_impl::set_delta(float delta)
+{
     if (delta <= 0.0f || delta > 300.0f) {
-        throw std::out_of_range(
-            "qrd_rls_filter_ff_impl::set_delta: Regularization factor must be in range (0, 300]");
+        throw std::out_of_range("qrd_rls_filter_ff_impl::set_delta: Regularization "
+                                "factor must be in range (0, 300]");
     } else {
         d_delta = delta;
     }
@@ -108,10 +122,11 @@ void qrd_rls_filter_ff_impl::set_delta(float delta) {
 
 float qrd_rls_filter_ff_impl::get_lambda() const { return d_lambda; }
 
-void qrd_rls_filter_ff_impl::set_lambda(float lambda) {
+void qrd_rls_filter_ff_impl::set_lambda(float lambda)
+{
     if (lambda <= 0.0f || lambda > 1.0f) {
-        throw std::out_of_range(
-            "qrd_rls_filter_ff_impl::set_lambda: Forgetting factor must be in range (0, 1]");
+        throw std::out_of_range("qrd_rls_filter_ff_impl::set_lambda: Forgetting factor "
+                                "must be in range (0, 1]");
     } else {
         d_lambda = lambda;
     }
@@ -127,20 +142,23 @@ void qrd_rls_filter_ff_impl::set_adapt(bool adapt) { d_adapt = adapt; }
 
 bool qrd_rls_filter_ff_impl::get_reset() const { return d_reset; }
 
-void qrd_rls_filter_ff_impl::set_reset(bool reset) {
+void qrd_rls_filter_ff_impl::set_reset(bool reset)
+{
     d_reset = reset;
     if (d_reset) {
         set_taps(std::vector<float>(d_taps.size(), 0.0));
     }
 }
 
-float qrd_rls_filter_ff_impl::error(const float& desired, const float& out) {
+float qrd_rls_filter_ff_impl::error(const float& desired, const float& out)
+{
     return desired - out;
 }
 
 int qrd_rls_filter_ff_impl::work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
-                                 gr_vector_void_star& output_items) {
+                                 gr_vector_void_star& output_items)
+{
     const auto* desired = (const float*)input_items[0] + d_taps.size() - 1;
     const auto* input = (const float*)input_items[1];
     auto* out = (float*)output_items[0];
@@ -168,7 +186,8 @@ int qrd_rls_filter_ff_impl::work(int noutput_items,
     int k = 0;
     size_t N = d_taps.size();
 #ifdef ARMADILLO_FOUND
-    arma::fvec input_arma((float*)input, noutput_items * decimation() + N - 1, false, true);
+    arma::fvec input_arma(
+        (float*)input, noutput_items * decimation() + N - 1, false, true);
 #endif // ARMADILLO_FOUND
     for (int i = 0; i < noutput_items; i++) {
         if (d_adapt && (!d_skip || d_i >= (d_skip + 1))) {
@@ -238,10 +257,13 @@ int qrd_rls_filter_ff_impl::work(int noutput_items,
 
         if (taps_out != nullptr) {
 #ifdef ARMADILLO_FOUND
-            std::memcpy(
-                &taps_out[i * d_taps.size()], d_taps.memptr(), sizeof(float) * d_taps.size());
+            std::memcpy(&taps_out[i * d_taps.size()],
+                        d_taps.memptr(),
+                        sizeof(float) * d_taps.size());
 #else
-            std::memcpy(&taps_out[i * d_taps.size()], &(d_taps[0]), sizeof(float) * d_taps.size());
+            std::memcpy(&taps_out[i * d_taps.size()],
+                        &(d_taps[0]),
+                        sizeof(float) * d_taps.size());
 #endif // ARMADILLO_FOUND
         }
 

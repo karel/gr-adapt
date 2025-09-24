@@ -25,7 +25,8 @@ rls_filter_ff::sptr rls_filter_ff::make(bool first_input,
                                         unsigned skip,
                                         unsigned decimation,
                                         bool adapt,
-                                        bool reset) {
+                                        bool reset)
+{
     return gnuradio::get_initial_sptr(new rls_filter_ff_impl(
         first_input, num_taps, delta, lambda, skip, decimation, adapt, reset));
 }
@@ -44,12 +45,22 @@ rls_filter_ff_impl::rls_filter_ff_impl(bool first_input,
     : gr::sync_decimator(
           "rls_filter_ff",
           gr::io_signature::make(2, 2, sizeof(float)),
-          gr::io_signature::makev(
-              1, 3, std::vector<int>{sizeof(float), sizeof(float), num_taps * int(sizeof(float))}),
+          gr::io_signature::makev(1,
+                                  3,
+                                  std::vector<int>{ sizeof(float),
+                                                    sizeof(float),
+                                                    num_taps * int(sizeof(float)) }),
           decimation),
-      fir_filter_fff(std::vector<float>(num_taps, 0.0)), d_first_input(first_input),
-      d_updated(false), d_delta(0.5), d_lambda(0.9), d_skip(skip), d_i(0), d_adapt(adapt),
-      d_reset(false) {
+      fir_filter_fff(std::vector<float>(num_taps, 0.0)),
+      d_first_input(first_input),
+      d_updated(false),
+      d_delta(0.5),
+      d_lambda(0.9),
+      d_skip(skip),
+      d_i(0),
+      d_adapt(adapt),
+      d_reset(false)
+{
     set_delta(delta);
     set_lambda(lambda);
 
@@ -67,19 +78,22 @@ rls_filter_ff_impl::rls_filter_ff_impl(bool first_input,
     init_internals();
 }
 
-void rls_filter_ff_impl::init_internals() {
+void rls_filter_ff_impl::init_internals()
+{
     // Initialize the correlation matrix.
 #ifdef ARMADILLO_FOUND
     d_P = (1.0 / d_delta) * arma::eye<arma::fmat>(d_taps.size(), d_taps.size());
 #else
-    d_P = std::vector<std::vector<float>>(d_taps.size(), std::vector<float>(d_taps.size(), 0.0));
+    d_P = std::vector<std::vector<float>>(d_taps.size(),
+                                          std::vector<float>(d_taps.size(), 0.0));
     for (int i = 0; i < d_taps.size(); i++) {
         d_P[i][i] = 1.0 / d_delta;
     }
 #endif // ARMADILLO_FOUND
 }
 
-void rls_filter_ff_impl::set_taps(const std::vector<float>& new_taps) {
+void rls_filter_ff_impl::set_taps(const std::vector<float>& new_taps)
+{
 #ifdef ARMADILLO_FOUND
     d_new_taps = arma::fvec(new_taps);
 #else
@@ -88,7 +102,8 @@ void rls_filter_ff_impl::set_taps(const std::vector<float>& new_taps) {
     d_updated = true;
 }
 
-const std::vector<float>& rls_filter_ff_impl::get_taps() {
+const std::vector<float>& rls_filter_ff_impl::get_taps()
+{
 #ifdef ARMADILLO_FOUND
     fir_filter_fff::d_taps = arma::conv_to<std::vector<float>>::from(d_taps);
 #endif // ARMADILLO_FOUND
@@ -97,10 +112,11 @@ const std::vector<float>& rls_filter_ff_impl::get_taps() {
 
 float rls_filter_ff_impl::get_delta() const { return d_delta; }
 
-void rls_filter_ff_impl::set_delta(float delta) {
+void rls_filter_ff_impl::set_delta(float delta)
+{
     if (delta <= 0.0f || delta > 300.0f) {
-        throw std::out_of_range(
-            "rls_filter_ff_impl::set_delta: Regularization factor must be in range (0, 300]");
+        throw std::out_of_range("rls_filter_ff_impl::set_delta: Regularization factor "
+                                "must be in range (0, 300]");
     } else {
         d_delta = delta;
     }
@@ -108,7 +124,8 @@ void rls_filter_ff_impl::set_delta(float delta) {
 
 float rls_filter_ff_impl::get_lambda() const { return d_lambda; }
 
-void rls_filter_ff_impl::set_lambda(float lambda) {
+void rls_filter_ff_impl::set_lambda(float lambda)
+{
     if (lambda <= 0.0f || lambda > 1.0f) {
         throw std::out_of_range(
             "rls_filter_ff_impl::set_lambda: Forgetting factor must be in range (0, 1]");
@@ -127,20 +144,28 @@ void rls_filter_ff_impl::set_adapt(bool adapt) { d_adapt = adapt; }
 
 bool rls_filter_ff_impl::get_reset() const { return d_reset; }
 
-void rls_filter_ff_impl::set_reset(bool reset) {
+void rls_filter_ff_impl::set_reset(bool reset)
+{
     d_reset = reset;
     if (d_reset) {
         set_taps(std::vector<float>(d_taps.size(), 0.0));
     }
 }
 
-float rls_filter_ff_impl::error(const float& desired, const float& out) { return desired - out; }
+float rls_filter_ff_impl::error(const float& desired, const float& out)
+{
+    return desired - out;
+}
 
-void rls_filter_ff_impl::update_tap(float& tap, const float& gain) { tap = tap + gain * d_error; }
+void rls_filter_ff_impl::update_tap(float& tap, const float& gain)
+{
+    tap = tap + gain * d_error;
+}
 
 int rls_filter_ff_impl::work(int noutput_items,
                              gr_vector_const_void_star& input_items,
-                             gr_vector_void_star& output_items) {
+                             gr_vector_void_star& output_items)
+{
     const auto* desired = (const float*)input_items[0] + d_taps.size() - 1;
     const auto* input = (const float*)input_items[1];
     auto* out = (float*)output_items[0];
@@ -168,7 +193,8 @@ int rls_filter_ff_impl::work(int noutput_items,
     int j = 0;
     size_t l = d_taps.size();
 #ifdef ARMADILLO_FOUND
-    arma::fcolvec input_arma((float*)input, noutput_items * decimation() + l - 1, false, true);
+    arma::fcolvec input_arma(
+        (float*)input, noutput_items * decimation() + l - 1, false, true);
 #endif // ARMADILLO_FOUND
     for (int i = 0; i < noutput_items; i++) {
         // Calculate the output signal y(n) of the adaptive filter.
@@ -197,10 +223,11 @@ int rls_filter_ff_impl::work(int noutput_items,
         if (d_adapt && (!d_skip || d_i >= (d_skip + 1))) {
             d_i = 0;
 #ifdef ARMADILLO_FOUND
-            arma::fcolvec pi(1 / d_lambda * d_P * input_arma.subvec(j, arma::size(d_taps)));
-            float gamma =
-                1 +
-                1 / d_lambda * arma::as_scalar(input_arma.subvec(j, arma::size(d_taps)).t() * pi);
+            arma::fcolvec pi(1 / d_lambda * d_P *
+                             input_arma.subvec(j, arma::size(d_taps)));
+            float gamma = 1 + 1 / d_lambda *
+                                  arma::as_scalar(
+                                      input_arma.subvec(j, arma::size(d_taps)).t() * pi);
             arma::fcolvec k(pi / gamma);
             d_taps = d_taps + (k * d_error);
 #else
@@ -225,7 +252,8 @@ int rls_filter_ff_impl::work(int noutput_items,
 #endif // ARMADILLO_FOUND
 
 #ifdef ARMADILLO_FOUND
-            d_P = (d_P - k * input_arma.subvec(j, arma::size(d_taps)).t() * d_P) * 1 / d_lambda;
+            d_P = (d_P - k * input_arma.subvec(j, arma::size(d_taps)).t() * d_P) * 1 /
+                  d_lambda;
 #else
             std::vector<float> P1(l, 0.0);
             for (int m = 0; m < l; m++) {
@@ -245,10 +273,13 @@ int rls_filter_ff_impl::work(int noutput_items,
 
         if (taps_out != nullptr) {
 #ifdef ARMADILLO_FOUND
-            std::memcpy(
-                &taps_out[i * d_taps.size()], d_taps.memptr(), sizeof(float) * d_taps.size());
+            std::memcpy(&taps_out[i * d_taps.size()],
+                        d_taps.memptr(),
+                        sizeof(float) * d_taps.size());
 #else
-            std::memcpy(&taps_out[i * d_taps.size()], &(d_taps[0]), sizeof(float) * d_taps.size());
+            std::memcpy(&taps_out[i * d_taps.size()],
+                        &(d_taps[0]),
+                        sizeof(float) * d_taps.size());
 #endif // ARMADILLO_FOUND
         }
 
