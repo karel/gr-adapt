@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2025 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rls_filter_cc.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(92f44ea4d26c8b55091ae89883670346)                     */
+/* BINDTOOL_HEADER_FILE_HASH(bc44f230432ce7dba49322c15f402801)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

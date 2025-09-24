@@ -5,8 +5,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef INCLUDED_ADAPT_fo_lms_filter_cc_impl_H
-#define INCLUDED_ADAPT_fo_lms_filter_cc_impl_H
+#ifndef INCLUDED_ADAPT_FO_LMS_FILTER_CC_IMPL_H
+#define INCLUDED_ADAPT_FO_LMS_FILTER_CC_IMPL_H
 
 #include <gnuradio/adapt/fo_lms_filter_cc.h>
 #include <gnuradio/filter/fir_filter.h>
@@ -66,4 +66,4 @@ public:
 } // namespace adapt
 } // namespace gr
 
-#endif /* INCLUDED_ADAPT_fo_lms_filter_cc_impl_H */
+#endif /* INCLUDED_ADAPT_FO_LMS_FILTER_CC_IMPL_H */
