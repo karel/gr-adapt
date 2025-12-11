@@ -33,6 +33,7 @@ namespace py = pybind11;
     void bind_iqrd_rls_filter_cc(py::module& m);
     void bind_fo_lms_filter_cc(py::module& m);
     void bind_s_fo_lms_filter_cc(py::module& m);
+    void bind_vss_fo_lms_filter_cc(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -73,5 +74,6 @@ PYBIND11_MODULE(adapt_python, m)
     bind_iqrd_rls_filter_cc(m);
     bind_fo_lms_filter_cc(m);
     bind_s_fo_lms_filter_cc(m);
+    bind_vss_fo_lms_filter_cc(m);
     // ) END BINDING_FUNCTION_CALLS
 }

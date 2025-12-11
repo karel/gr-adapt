@@ -36,7 +36,8 @@ list(APPEND adapt_python_files
     iqrd_rls_filter_ff_python.cc
     iqrd_rls_filter_cc_python.cc
     fo_lms_filter_cc_python.cc
-    s_fo_lms_filter_cc_python.cc python_bindings.cc)
+    s_fo_lms_filter_cc_python.cc
+    vss_fo_lms_filter_cc_python.cc python_bindings.cc)
 
 gr_pybind_make_oot(adapt ../../.. gr::adapt "${adapt_python_files}")
 

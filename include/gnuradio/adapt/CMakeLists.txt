@@ -21,4 +21,5 @@ install(FILES api.h
     iqrd_rls_filter_ff.h
     iqrd_rls_filter_cc.h
     fo_lms_filter_cc.h
-    s_fo_lms_filter_cc.h DESTINATION include/gnuradio/adapt)
+    s_fo_lms_filter_cc.h
+    vss_fo_lms_filter_cc.h DESTINATION include/gnuradio/adapt)

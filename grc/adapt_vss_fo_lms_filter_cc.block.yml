@@ -1,0 +1,102 @@
+id: adapt_vss_fo_lms_filter_cc
+label: VSS-FO-LMS Filter
+category: '[Adaptive Filters]/'
+
+parameters:
+-   id: samp_rate
+    label: Sample Rate
+    dtype: float
+-   id: num_taps
+    label: Num. Taps
+    dtype: int
+-   id: lambda_e
+    label: "\u03BB_e"
+    dtype: float
+    default: 0.9999
+-   id: lambda_R
+    label: "\u03BB_R"
+    dtype: float
+-   id: lambda_y
+    label: "\u03BB_y"
+    dtype: float
+-   id: lambda_epsilon
+    label: "\u03BB_\u03B5"
+    dtype: float
+-   id: lambda_eta
+    label: "\u03BB_\u03B7"
+    dtype: float
+-   id: sigma2_v
+    label: "\u03C3^2_v"
+    dtype: float
+    default: 0.0
+-   id: step_size_limits
+    label: Step Size Limits
+    dtype: real_vector
+    default: [1e-8, 1e-1, 1e-9, 1e-3, 1e-9, 1e-3]
+    hide: part
+-   id: adapt
+    label: Adapt
+    dtype: bool
+    default: 'True'
+-   id: reset
+    label: Reset
+    dtype: bool
+    default: 'False'
+
+inputs:
+-   label: reference
+    domain: stream
+    dtype: complex
+    multiplicity: '1'
+-   label: input
+    domain: stream
+    dtype: complex
+    multiplicity: '1'
+
+outputs:
+-   label: output
+    domain: stream
+    dtype: complex
+    multiplicity: '1'
+-   label: error
+    domain: stream
+    dtype: complex
+    multiplicity: '1'
+    optional: true
+-   label: cfo
+    domain: stream
+    dtype: float
+    multiplicity: '1'
+    optional: true
+-   label: sfo
+    domain: stream
+    dtype: float
+    multiplicity: '1'
+    optional: true
+-   label: noise
+    domain: stream
+    dtype: float
+    multiplicity: '1'
+    optional: true
+
+asserts:
+-   ${ num_taps > 1 }
+-   ${ step_size_limits[0] < step_size_limits[1] }
+-   ${ step_size_limits[2] < step_size_limits[3] }
+-   ${ step_size_limits[4] < step_size_limits[5] }
+-   ${ len(step_size_limits) == 6 }
+
+templates:
+  imports: from gnuradio import adapt
+  make: adapt.vss_fo_lms_filter_cc(${samp_rate}, ${num_taps}, ${lambda_e}, ${lambda_R}, ${lambda_y}, ${lambda_epsilon}, ${lambda_eta}, ${sigma2_v}, ${step_size_limits}, ${adapt}, ${reset})
+  callbacks:
+    - set_lambda_e(${lambda_e})
+    - set_lambda_R(${lambda_R})
+    - set_lambda_y(${lambda_y})
+    - set_lambda_epsilon(${lambda_epsilon})
+    - set_lambda_eta(${lambda_eta})
+    - set_sigma2_v(${sigma2_v})
+    - set_adapt(${adapt})
+    - set_reset(${reset})
+
+file_format: 1

@@ -19,14 +19,17 @@ The LMS and NLMS filters take an optional third input, which, if provided, will 
 
 * Frequency offsets-compensated least mean squares (__FO-LMS__)[^1]
 * Spline-interpolated and frequency offsets-compensated least mean squares (__S-FO-LMS__)[^2]
+* Variable step sizes frequency offsets-compensated least mean squares (__VSS-FO-LMS__)[^3]
 
 [^1]: K. Pärlin, T. Riihonen, V. L. Nir, and M. Adrat, “Estimating and Tracking Wireless Channels under Carrier and Sampling Frequency Offsets,” IEEE Transactions on Signal Processing, vol. 71, pp. 1053&ndash;1066, Mar. 2023.
 
 [^2]: K. Pärlin, M. Turunen, A. Byman, T. Meriläinen, V. L. Nir, M. Adrat, and T. Riihonen “High-Power Cooperative Jamming with Nonlinear Known-Interference Cancellation,” IEEE Transactions on Aerospace and Electronic Systems, vol. 61, pp. 7193&ndash;7204, Jan. 2025.
 
+[^3]: K. Pärlin, A. Byman, T. Meriläinen, and T. Riihonen “A Variable Step Sizes Frequency Offsets-Compensated Least Mean Squares Algorithm,” submitted for review, preprint on arxiv.org.
+
 ### Tests
 
-There are several tests regarding performance and convergence of the provided filters in the [python](./python) directory. The [README](./python/README.md) in there gives an overview of those test results.
+There are several tests regarding performance and convergence of the provided filters in the [python](./python/adapt) directory. The [README](./python/adapt/README.md) in there gives an overview of those test results.
 
 ### Examples
 
@@ -45,8 +48,10 @@ In the [examples](./examples) directory, examples of using adaptive filter block
 - [GNU Radio](https://github.com/gnuradio/gnuradio) with the following components:
     - gnuradio-runtime
     - gnuradio-filter
+    - gnuradio-blocks
+    - gnuradio-fft
 - [VOLK](http://libvolk.org/)
-- CMake 3.8
+- CMake 3.16
 - [pybind11](https://github.com/pybind/pybind11)
 - [Armadillo](http://arma.sourceforge.net/) (optional*)
 
