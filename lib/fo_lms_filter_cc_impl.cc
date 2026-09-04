@@ -131,6 +131,31 @@ int fo_lms_filter_cc_impl::general_work(int noutput_items,
         return 0;
     }
 
+    // Look for a tag to synchronize reference and input streams.
+    uint64_t start_desired = nitems_read(0);
+    uint64_t start_input = nitems_read(1);
+    uint64_t end_desired = start_desired + (uint64_t)(noutput_items);
+    uint64_t end_input = start_input + (uint64_t)(noutput_items);
+
+    pmt::pmt_t key_desired = pmt::string_to_symbol("peak_d");
+    pmt::pmt_t key_input = pmt::string_to_symbol("peak_i");
+    std::vector<tag_t> peak_tags_desired;
+    std::vector<tag_t> peak_tags_input;
+
+    get_tags_in_range(peak_tags_desired, 0, start_desired, end_desired, key_desired);
+    get_tags_in_range(peak_tags_input, 1, start_input, end_input, key_input);
+
+    if (peak_tags_desired.size() > 0 && peak_tags_input.size() > 0) {
+        const tag_t tag_desired = peak_tags_desired[0];
+        const tag_t tag_input = peak_tags_input[0];
+        uint64_t offset_desired = tag_desired.offset;
+        uint64_t offset_input = tag_input.offset;
+        std::cout << std::endl;
+        consume(0, offset_desired - start_desired + 1);
+        consume(1, offset_input - start_input + 1 + 0);
+        return 0;
+    }
+
     int m = 0, i = 0;
 
     for (; i < noutput_items - INTERPOLATOR_PADDING; i++) {
