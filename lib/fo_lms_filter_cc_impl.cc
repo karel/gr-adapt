@@ -150,7 +150,6 @@ int fo_lms_filter_cc_impl::general_work(int noutput_items,
         const tag_t tag_input = peak_tags_input[0];
         uint64_t offset_desired = tag_desired.offset;
         uint64_t offset_input = tag_input.offset;
-        std::cout << std::endl;
         consume(0, offset_desired - start_desired + 1);
         consume(1, offset_input - start_input + 1 + 0);
         return 0;
